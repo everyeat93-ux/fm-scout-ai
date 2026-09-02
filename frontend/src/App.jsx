@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Activity, Search, Compass, Shield, Sparkles, Layers, Sliders, 
   Download, HelpCircle, ArrowRight, CheckCircle2, User, Trophy, Eye, BookOpen

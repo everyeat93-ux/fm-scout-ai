@@ -573,7 +573,7 @@ def generate_mega_dataset() -> List[Dict[str, Any]]:
                 "age": age,
                 "nationality": p_nat,
                 "nat_code": nat_code,
-                "club": club_name,
+                "club": real_club,
                 "league": league,
                 "league_tier": tier,
                 "primary_pos": arch_data["pos"],

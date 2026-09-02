@@ -34,28 +34,28 @@ def get_mega_player_dataset():
         })
 
     # 1. KOREAN & ASIAN STARS
-    add_p("p_son", "H. M. Son", "Son Heung-min", "손흥민", 32, "South Korea", "KR", "London White", "Premier League", 1, "ST", "LW", "FW", "Both", 183, 45.0, 230.0, 2026,
-          "Two-Footed Lethal Finisher & Inside Forward",
+    add_p("p_son", "H. M. Son", "Son Heung-min", "손흥민", 32, "South Korea", "KR", "Tottenham Hotspur", "Premier League", 1, "ST", "LW", "FW", "Both", 183, 45.0, 230.0, 2026,
+          "양발 피니셔 & 인디펜던트 스코어러 (Two-Footed Finisher)",
           {"kp": 2.4, "prog_p": 4.1, "pass_acc": 82.5, "passes_att": 35.0, "through_balls": 0.55, "crosses_box": 1.2, "shots": 2.8, "box_shots": 2.2, "sot_pct": 48.5, "xg": 0.52, "npxg": 0.44, "goals": 0.55, "dribbles": 2.2, "dribble_pct": 54.0, "carry_dist": 250.0, "fouls_drawn": 1.6, "prog_carries": 4.6, "interceptions": 0.5, "tackles_won": 0.9, "clearances": 0.4, "blocks": 0.5, "recoveries": 3.8, "aerial_pct": 36.0, "ground_duels": 4.8, "aerial_duels": 0.6, "pressures": 14.5})
 
-    add_p("p_lee_kangin", "K. I. Lee", "Lee Kang-in", "이강인", 23, "South Korea", "KR", "Paris Blue", "Ligue 1", 1, "AM", "RW", "MF", "Left", 173, 25.0, 80.0, 2028,
-          "Press-Resistant Playmaker & Ball Manipulator",
+    add_p("p_lee_kangin", "K. I. Lee", "Lee Kang-in", "이강인", 23, "South Korea", "KR", "Paris Saint-Germain", "Ligue 1", 1, "AM", "RW", "MF", "Left", 173, 25.0, 80.0, 2028,
+          "탈압박 찬스메이커 & 왼발 플레이메이커 (Press-Resistant Playmaker)",
           {"kp": 2.9, "prog_p": 5.8, "pass_acc": 88.2, "passes_att": 52.0, "through_balls": 0.72, "crosses_box": 1.4, "shots": 1.8, "box_shots": 0.9, "sot_pct": 38.0, "xg": 0.22, "npxg": 0.22, "goals": 0.20, "dribbles": 2.6, "dribble_pct": 66.5, "carry_dist": 240.0, "fouls_drawn": 2.5, "prog_carries": 4.5, "interceptions": 0.8, "tackles_won": 1.4, "clearances": 0.3, "blocks": 0.6, "recoveries": 5.4, "aerial_pct": 30.0, "ground_duels": 5.6, "aerial_duels": 0.3, "pressures": 17.5})
 
-    add_p("p_kim_minjae", "M. J. Kim", "Kim Min-jae", "김민재", 27, "South Korea", "KR", "München Rot", "Bundesliga", 1, "CB", "DF", "DF", "Right", 190, 45.0, 170.0, 2028,
-          "Dominant Monster Stopper & High Line Sweeper",
+    add_p("p_kim_minjae", "M. J. Kim", "Kim Min-jae", "김민재", 27, "South Korea", "KR", "Bayern Munich", "Bundesliga", 1, "CB", "DF", "DF", "Right", 190, 45.0, 170.0, 2028,
+          "괴물형 파이터 스토퍼 & 라인 컨트롤러 (Dominant Monster Stopper)",
           {"kp": 0.4, "prog_p": 5.2, "pass_acc": 93.1, "passes_att": 86.0, "through_balls": 0.18, "crosses_box": 0.05, "shots": 0.6, "box_shots": 0.6, "sot_pct": 32.0, "xg": 0.08, "npxg": 0.08, "goals": 0.06, "dribbles": 0.4, "dribble_pct": 75.0, "carry_dist": 180.0, "fouls_drawn": 0.9, "prog_carries": 1.2, "interceptions": 1.9, "tackles_won": 2.6, "clearances": 3.8, "blocks": 1.4, "recoveries": 7.8, "aerial_pct": 72.0, "ground_duels": 6.8, "aerial_duels": 3.6, "pressures": 12.5})
 
-    add_p("p_hwang_heechan", "H. C. Hwang", "Hwang Hee-chan", "황희찬", 28, "South Korea", "KR", "Wolverhampton Gold", "Premier League", 1, "ST", "RW", "FW", "Right", 177, 25.0, 85.0, 2028,
-          "High-Efficiency Box Slasher & Presser",
+    add_p("p_hwang_heechan", "H. C. Hwang", "Hwang Hee-chan", "황희찬", 28, "South Korea", "KR", "Wolverhampton Wanderers", "Premier League", 1, "ST", "RW", "FW", "Right", 177, 25.0, 85.0, 2028,
+          "황소 돌파 & 고효율 박스 슬래셔 (Box Slasher & Presser)",
           {"kp": 1.2, "prog_p": 2.4, "pass_acc": 78.0, "passes_att": 25.0, "through_balls": 0.25, "crosses_box": 0.6, "shots": 2.4, "box_shots": 2.0, "sot_pct": 46.0, "xg": 0.45, "npxg": 0.45, "goals": 0.48, "dribbles": 1.9, "dribble_pct": 52.0, "carry_dist": 200.0, "fouls_drawn": 2.2, "prog_carries": 3.8, "interceptions": 0.4, "tackles_won": 1.1, "clearances": 0.5, "blocks": 0.4, "recoveries": 3.6, "aerial_pct": 42.0, "ground_duels": 5.5, "aerial_duels": 1.0, "pressures": 18.0})
 
-    add_p("p_bae_junho", "J. H. Bae", "Bae Jun-ho", "배준호", 21, "South Korea", "KR", "Stoke Red", "Championship", 2, "AM", "LW", "MF", "Right", 180, 5.0, 12.0, 2027,
-          "Agile Pocket Carrier & Prospect Gem",
+    add_p("p_bae_junho", "J. H. Bae", "Bae Jun-ho", "배준호", 21, "South Korea", "KR", "Stoke City", "Championship", 2, "AM", "LW", "MF", "Right", 180, 5.0, 12.0, 2027,
+          "포켓 캐리어 & 유망주 플레이메이커 (Pocket Carrier Gem)",
           {"kp": 2.1, "prog_p": 4.5, "pass_acc": 82.0, "passes_att": 42.0, "through_balls": 0.45, "crosses_box": 0.8, "shots": 1.6, "box_shots": 0.9, "sot_pct": 34.0, "xg": 0.18, "npxg": 0.18, "goals": 0.14, "dribbles": 2.5, "dribble_pct": 63.0, "carry_dist": 230.0, "fouls_drawn": 2.3, "prog_carries": 4.2, "interceptions": 0.7, "tackles_won": 1.6, "clearances": 0.5, "blocks": 0.7, "recoveries": 5.2, "aerial_pct": 44.0, "ground_duels": 5.9, "aerial_duels": 0.8, "pressures": 19.5})
 
-    add_p("p_yang_minhyeok", "M. H. Yang", "Yang Min-hyeok", "양민혁", 18, "South Korea", "KR", "London White", "Premier League", 1, "W", "RW", "FW", "Right", 174, 4.0, 10.0, 2029,
-          "Explosive Teen Slasher & Wonderkid",
+    add_p("p_yang_minhyeok", "M. H. Yang", "Yang Min-hyeok", "양민혁", 18, "South Korea", "KR", "Tottenham Hotspur", "Premier League", 1, "W", "RW", "FW", "Right", 174, 4.0, 10.0, 2029,
+          "폭발적 스피드 & 원더키드 윙어 (Wonderkid Inverted Winger)",
           {"kp": 1.7, "prog_p": 3.2, "pass_acc": 79.0, "passes_att": 28.0, "through_balls": 0.32, "crosses_box": 0.9, "shots": 2.5, "box_shots": 1.8, "sot_pct": 44.0, "xg": 0.38, "npxg": 0.38, "goals": 0.36, "dribbles": 3.0, "dribble_pct": 58.0, "carry_dist": 260.0, "fouls_drawn": 2.4, "prog_carries": 5.2, "interceptions": 0.6, "tackles_won": 1.4, "clearances": 0.3, "blocks": 0.5, "recoveries": 4.4, "aerial_pct": 32.0, "ground_duels": 5.6, "aerial_duels": 0.4, "pressures": 18.2})
 
     add_p("p_seol_youngwoo", "Y. W. Seol", "Seol Young-woo", "설영우", 25, "South Korea", "KR", "Belgrade Red", "Serbian SuperLiga", 2, "FB", "RB", "DF", "Right", 180, 5.0, 15.0, 2027,
