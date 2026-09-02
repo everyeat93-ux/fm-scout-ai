@@ -59,6 +59,16 @@ const getGradeLabel = (grade) => {
   }
 };
 
+const safeNum = (v, fallback = 0) => {
+  const n = parseFloat(v);
+  return isNaN(n) ? fallback : n;
+};
+
+const safeFormat = (v, digits = 1) => {
+  const n = parseFloat(v);
+  return isNaN(n) ? '0.0' : n.toFixed(digits);
+};
+
 export default function ScoutReportCard({
   candidate,
   targetPlayer,
@@ -238,16 +248,16 @@ export default function ScoutReportCard({
                 </div>
                 <div className="text-xs font-medium text-gray-400 mt-0.5 flex items-center gap-2">
                   <span>vs <span className="text-white font-semibold">{targetPlayer.name}</span></span>
-                  {candidate?.cosine_pct && (
+                  {candidate?.cosine_pct !== undefined && candidate?.cosine_pct !== null && (
                     <span className="text-[10px] font-mono text-gray-300 bg-[#0a0a16] px-1.5 py-0.5 rounded border border-[#1f2240]">
-                      스타일: <strong className="text-[#00ff88]">{candidate.cosine_pct.toFixed(1)}%</strong> | 체급: <strong className="text-[#00e5ff]">{candidate.euclidean_pct.toFixed(1)}%</strong>
+                      스타일: <strong className="text-[#00ff88]">{safeFormat(candidate.cosine_pct)}%</strong> | 체급: <strong className="text-[#00e5ff]">{safeFormat(candidate.euclidean_pct)}%</strong>
                     </span>
                   )}
                 </div>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-mono font-extrabold text-[#00ff88] tracking-tight drop-shadow-[0_0_10px_rgba(0,255,136,0.4)]">
-                  {similarityPct.toFixed(1)}%
+                  {safeFormat(similarityPct)}%
                 </div>
               </div>
             </div>
@@ -349,8 +359,8 @@ export default function ScoutReportCard({
             <div className="bg-[#0e0e22] p-2 rounded border border-[#1f2240] font-mono text-xs">
               <div className="text-[10px] text-indigo-400 font-sans font-medium">태클 & 가로채기 (Tkl+Int)</div>
               <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-white font-bold">{(player.tackles_won + player.interceptions).toFixed(1)}</span>
-                <span className="text-[11px] text-gray-400">기준: {(targetPlayer.tackles_won + targetPlayer.interceptions).toFixed(1)}</span>
+                <span className="text-white font-bold">{safeFormat(safeNum(player.tackles_won) + safeNum(player.interceptions))}</span>
+                <span className="text-[11px] text-gray-400">기준: {safeFormat(safeNum(targetPlayer.tackles_won) + safeNum(targetPlayer.interceptions))}</span>
               </div>
             </div>
 

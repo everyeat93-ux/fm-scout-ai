@@ -28,10 +28,14 @@ export default function RadarChartCanvas({
   // Rotate so that the first axis points straight up (-PI/2)
   const startAngle = -Math.PI / 2;
 
+  const safeTargetScores = (targetScores || [50, 50, 50, 50, 50]).map(v => (typeof v === 'number' && !isNaN(v) ? Math.max(0, Math.min(100, v)) : 50));
+  const safeCandidateScores = (candidateScores || [50, 50, 50, 50, 50]).map(v => (typeof v === 'number' && !isNaN(v) ? Math.max(0, Math.min(100, v)) : 50));
+
   // Function to get (x, y) coordinates for a given index and value (0-100)
   const getCoordinates = (index, value) => {
     const angle = startAngle + index * angleStep;
-    const r = (value / 100) * radius;
+    const safeVal = (typeof value === 'number' && !isNaN(value)) ? Math.max(0, Math.min(100, value)) : 50;
+    const r = (safeVal / 100) * radius;
     return {
       x: center + r * Math.cos(angle),
       y: center + r * Math.sin(angle)
@@ -40,7 +44,8 @@ export default function RadarChartCanvas({
 
   // Generate polygon points string
   const getPolygonPoints = (scores) => {
-    return scores
+    const validScores = (scores || [50, 50, 50, 50, 50]).map(v => (typeof v === 'number' && !isNaN(v) ? Math.max(0, Math.min(100, v)) : 50));
+    return validScores
       .map((score, i) => {
         const pt = getCoordinates(i, score);
         return `${pt.x},${pt.y}`;

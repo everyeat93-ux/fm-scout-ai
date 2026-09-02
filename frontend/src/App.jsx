@@ -372,10 +372,10 @@ export default function App() {
                           {/* Match % & Gem Score */}
                           <div className="text-right">
                             <div className="text-base font-extrabold font-mono text-[#00ff88]">
-                              {item.similarity_pct.toFixed(1)}%
+                              {(Number(item.similarity_pct) || 0).toFixed(1)}%
                             </div>
                             <div className="text-[10px] font-mono text-gray-400">
-                              스타일 <span className="text-[#00ff88]">{item.cosine_pct?.toFixed(0)}%</span> • 체급 <span className="text-[#00e5ff]">{item.euclidean_pct?.toFixed(0)}%</span>
+                              스타일 <span className="text-[#00ff88]">{(Number(item.cosine_pct) || 0).toFixed(0)}%</span> • 체급 <span className="text-[#00e5ff]">{(Number(item.euclidean_pct) || 0).toFixed(0)}%</span>
                             </div>
                           </div>
                         </div>
