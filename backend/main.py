@@ -53,6 +53,17 @@ class CompareRequest(BaseModel):
 @app.on_event("startup")
 def on_startup():
     init_db()
+    try:
+        conn = get_db_connection()
+        c = conn.cursor()
+        c.execute("SELECT count(*) FROM players")
+        count = c.fetchone()[0]
+        if count == 0:
+            print("Database empty, auto-building 100% authentic real player database...")
+            from pipeline.run_real_db_build import build_100pct_real_database
+            build_100pct_real_database()
+    except Exception as e:
+        print(f"Startup DB check error: {e}")
 
 @app.get("/api/health")
 def health_check():
