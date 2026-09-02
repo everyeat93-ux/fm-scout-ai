@@ -123,48 +123,47 @@ export default function App() {
   }, []);
 
   // Fetch Target Player and Run Similarity Search
-  useEffect(() => {
+  const runScouting = useCallback(async () => {
     if (!targetPlayerId) return;
+    setLoading(true);
+    try {
+      const res = await fetch('/api/scout/similar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          target_player_id: targetPlayerId,
+          algorithm,
+          hybrid_balance: hybridBalance,
+          sequential_cutoff: sequentialCutoff,
+          position_match: positionMatch,
+          max_age: maxAge,
+          max_market_value: maxMarketValue,
+          league_tier: leagueTier,
+          limit: 20,
+          custom_weights: customWeights
+        })
+      });
 
-    const runScouting = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch('/api/scout/similar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            target_player_id: targetPlayerId,
-            algorithm,
-            hybrid_balance: hybridBalance,
-            sequential_cutoff: sequentialCutoff,
-            position_match: positionMatch,
-            max_age: maxAge,
-            max_market_value: maxMarketValue,
-            league_tier: leagueTier,
-            limit: 20,
-            custom_weights: customWeights
-          })
-        });
-
-        const data = await res.json();
-        if (data.target_player) {
-          setTargetPlayer(data.target_player);
-          setScoutResults(data.results || []);
-          if (data.results && data.results.length > 0) {
-            setSelectedCandidate(data.results[0]);
-          } else {
-            setSelectedCandidate(null);
-          }
+      const data = await res.json();
+      if (data.target_player) {
+        setTargetPlayer(data.target_player);
+        setScoutResults(data.results || []);
+        if (data.results && data.results.length > 0) {
+          setSelectedCandidate(data.results[0]);
+        } else {
+          setSelectedCandidate(null);
         }
-      } catch (err) {
-        console.error("Scouting search error:", err);
-      } finally {
-        setLoading(false);
       }
-    };
-
-    runScouting();
+    } catch (err) {
+      console.error("Scouting search error:", err);
+    } finally {
+      setLoading(false);
+    }
   }, [targetPlayerId, algorithm, hybridBalance, sequentialCutoff, positionMatch, maxMarketValue, maxAge, leagueTier, customWeights]);
+
+  useEffect(() => {
+    runScouting();
+  }, [runScouting]);
 
   const handleResetFilters = () => {
     setAlgorithm("hybrid");
@@ -282,6 +281,8 @@ export default function App() {
               customWeights={customWeights}
               setCustomWeights={setCustomWeights}
               onResetFilters={handleResetFilters}
+              onRunScouting={runScouting}
+              loading={loading}
             />
 
             {/* Dashboard Workspace */}
@@ -316,11 +317,22 @@ export default function App() {
                 </div>
 
                 <div className="space-y-2.5 max-h-[750px] overflow-y-auto pr-1">
-                  {scoutResults.map((item, idx) => {
-                    const p = item.player;
-                    const isSelected = selectedCandidate?.player?.id === p.id;
-                    const flag = countryFlags[p.nationality] || "🌐";
-                    const isTopGem = item.gem_score && item.gem_score > 90;
+                  {loading ? (
+                    <div className="p-12 text-center rounded-xl bg-[#121226] border border-[#00ff88]/30 text-gray-300 font-mono text-xs flex flex-col items-center justify-center gap-3 shadow-glow-neon animate-pulse">
+                      <RefreshCw className="w-7 h-7 text-[#00ff88] animate-spin" />
+                      <div className="text-white font-bold">11,685명 글로벌 선수 풀 스카우팅 연산 중...</div>
+                      <div className="text-[11px] text-gray-400">코사인 전술 스타일 + 유클리드 퍼포먼스 체급 계산 중</div>
+                    </div>
+                  ) : scoutResults.length === 0 ? (
+                    <div className="p-8 text-center rounded-xl bg-[#121226] border border-[#1f2240] text-gray-400 font-mono text-xs">
+                      조건에 일치하는 선수가 없습니다. 필터 조건을 완화해보세요.
+                    </div>
+                  ) : (
+                    scoutResults.map((item, idx) => {
+                      const p = item.player;
+                      const isSelected = selectedCandidate?.player?.id === p.id;
+                      const flag = countryFlags[p.nationality] || "🌐";
+                      const isTopGem = item.gem_score && item.gem_score > 90;
 
                     return (
                       <div
@@ -396,13 +408,9 @@ export default function App() {
                         </div>
                       </div>
                     );
-                  })}
-                  {scoutResults.length === 0 && !loading && (
-                    <div className="p-8 text-center text-xs text-gray-500 font-mono">
-                      검색 조건과 일치하는 선수가 없습니다.
-                    </div>
-                  )}
-                </div>
+                  })
+                )}
+              </div>
               </div>
             </div>
           </>

@@ -7,6 +7,7 @@ import os
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -18,6 +19,9 @@ app = FastAPI(
     description="Wyscout Tactical Analyst Themed Player Scouting & Similarity Calculation Service",
     version="1.0.0"
 )
+
+# Enable GZip compression for fast payload delivery
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # Enable CORS for local dev
 app.add_middleware(

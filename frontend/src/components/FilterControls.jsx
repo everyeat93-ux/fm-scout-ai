@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sliders, Zap, Shield, Target, Compass, Award, DollarSign, Calendar, RefreshCw } from 'lucide-react';
+import { Sliders, Zap, Shield, Target, Compass, Award, DollarSign, Calendar, RefreshCw, Search } from 'lucide-react';
 
 export default function FilterControls({
   algorithm,
@@ -18,7 +18,9 @@ export default function FilterControls({
   setLeagueTier,
   customWeights,
   setCustomWeights,
-  onResetFilters
+  onResetFilters,
+  onRunScouting,
+  loading = false
 }) {
   const [showAdvancedWeights, setShowAdvancedWeights] = useState(false);
 
@@ -389,6 +391,36 @@ export default function FilterControls({
           </div>
         </div>
       )}
+
+      {/* Search & Apply Action CTA Bar */}
+      <div className="pt-3 border-t border-[#1f2240] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="text-xs font-mono text-gray-400 flex items-center gap-1.5">
+          <Zap className="w-3.5 h-3.5 text-[#00ff88]" />
+          <span>설정된 필터 조건으로 <strong className="text-white font-bold">11,685명</strong> 전 세계 선수 풀을 정밀 스카우팅합니다.</span>
+        </div>
+
+        <button
+          onClick={onRunScouting}
+          disabled={loading}
+          className={`w-full sm:w-auto py-2.5 px-6 rounded-xl font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-lg ${
+            loading
+              ? 'bg-gray-700 text-gray-300 cursor-not-allowed opacity-80'
+              : 'bg-gradient-to-r from-[#00ff88] via-[#00e5ff] to-[#00ff88] bg-[length:200%_auto] hover:bg-right text-[#0a0a16] shadow-glow-neon active:scale-95 cursor-pointer font-extrabold'
+          }`}
+        >
+          {loading ? (
+            <>
+              <RefreshCw className="w-4 h-4 animate-spin text-gray-300" />
+              <span>11,685명 정밀 분석 중...</span>
+            </>
+          ) : (
+            <>
+              <Search className="w-4 h-4 text-black stroke-[2.5]" />
+              <span>🚀 스카우팅 리포트 생성 & 검색 실행</span>
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 }

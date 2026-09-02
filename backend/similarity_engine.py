@@ -30,8 +30,14 @@ POSITION_GROUPS = {
     "DF": ["CB", "FB", "LB", "RB", "LWB", "RWB"]
 }
 
-def get_all_player_feature_vectors():
-    """Fetches all player records, their per-90 stats, and tactical ratings."""
+_CACHED_ALL_PLAYERS = None
+
+def get_all_player_feature_vectors(reload: bool = False):
+    """Fetches all player records, their per-90 stats, and tactical ratings with in-memory caching."""
+    global _CACHED_ALL_PLAYERS
+    if _CACHED_ALL_PLAYERS is not None and not reload:
+        return _CACHED_ALL_PLAYERS
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -66,6 +72,7 @@ def get_all_player_feature_vectors():
     conn.close()
 
     players = [dict(row) for row in rows]
+    _CACHED_ALL_PLAYERS = players
     return players
 
 def calculate_normalized_vectors(players: List[Dict[str, Any]], custom_weights: Optional[Dict[str, float]] = None):
