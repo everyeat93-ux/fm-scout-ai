@@ -33,6 +33,7 @@ const countryFlags = {
 export default function TargetSelector({
   players = [],
   selectedTargetId,
+  targetPlayer = null,
   onSelectTarget,
   archetypes = []
 }) {
@@ -50,7 +51,7 @@ export default function TargetSelector({
     const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
-        const res = await fetch(`/api/players?q=${encodeURIComponent(searchQuery)}&limit=100`);
+        const res = await fetch(`/api/players?q=${encodeURIComponent(searchQuery)}&limit=50`);
         const data = await res.json();
         setSearchResults(data.players || []);
       } catch (err) {
@@ -58,92 +59,117 @@ export default function TargetSelector({
       } finally {
         setIsSearching(false);
       }
-    }, 150);
+    }, 120);
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const displayPlayers = searchQuery.trim() ? searchResults : players;
-  const selectedPlayer = players.find(p => p.id === selectedTargetId) || searchResults.find(p => p.id === selectedTargetId) || players[0];
-  const filteredPlayers = displayPlayers;
+  // The active display player is ALWAYS targetPlayer from backend if available
+  const activePlayer = targetPlayer || players.find(p => p.id === selectedTargetId) || players[0];
+  const displayResults = searchQuery.trim() ? searchResults : players.slice(0, 50);
+
+  // Quick Star Presets for 1-Click Fast Scouting
+  const quickStars = [
+    { id: "p_son", name: "손흥민", sub: "Tottenham/LAFC", icon: "👑" },
+    { id: "p_lee_kangin", name: "이강인", sub: "Atlético/PSG", icon: "⚡" },
+    { id: "p_kim_minjae", name: "김민재", sub: "Bayern Munich", icon: "🛡️" },
+    { id: "p_mbappe", name: "음바페", sub: "Real Madrid", icon: "🌟" },
+    { id: "p_haaland", name: "홀란드", sub: "Man City", icon: "⚽" },
+    { id: "p_odegaard", name: "외데고르", sub: "Arsenal", icon: "🪄" },
+    { id: "p_messi", name: "메시", sub: "Inter Miami", icon: "🐐" },
+  ];
 
   return (
-    <div className="flex flex-col gap-3">
-      {/* Target Player Selection Bar */}
+    <div className="flex flex-col gap-3.5">
+      {/* 1. Top Prominent Search Bar & Target Benchmark Display */}
       <div className="relative">
-        <div className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-[#121226] border border-[#1f2240] hover:border-[#2a2e5c] transition-all">
-          <div className="flex items-center gap-3">
-            {/* Silhouette Avatar */}
-            <div className="w-11 h-11 rounded-lg bg-[#181832] border border-[#2a2e5c] flex items-center justify-center relative shrink-0">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 p-4 rounded-2xl bg-[#121226] border-2 border-[#1f2240] hover:border-[#00ff88]/50 shadow-xl transition-all">
+          
+          {/* Active Target Player Info Card */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-xl bg-[#181832] border border-[#2a2e5c] flex items-center justify-center relative shrink-0 shadow-inner">
               <User className="w-6 h-6 text-gray-400" />
-              <span className="absolute -bottom-1 -right-1 text-xs">
-                {selectedPlayer ? countryFlags[selectedPlayer.nationality] : '🌐'}
+              <span className="absolute -bottom-1 -right-1 text-sm drop-shadow">
+                {activePlayer ? (countryFlags[activePlayer.nationality] || '🌐') : '🌐'}
               </span>
             </div>
 
-            {/* Target Player Info */}
-            {selectedPlayer ? (
+            {activePlayer ? (
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold text-[#00ff88]">TARGET BENCHMARK:</span>
-                  <h3 className="text-base font-bold text-white tracking-tight">
-                    {selectedPlayer.name} {selectedPlayer.korean_name && <span className="text-sm font-normal text-gray-400">({selectedPlayer.korean_name})</span>}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[11px] font-mono font-extrabold text-[#00ff88] bg-[#00ff88]/10 px-2 py-0.5 rounded border border-[#00ff88]/30">
+                    🎯 현재 비교 기준 선수
+                  </span>
+                  <h3 className="text-lg font-extrabold text-white tracking-tight">
+                    {activePlayer.korean_name || activePlayer.name} 
+                    {activePlayer.korean_name && <span className="text-xs font-mono font-normal text-gray-400 ml-1.5">({activePlayer.name})</span>}
                   </h3>
-                  <span className="px-1.5 py-0.5 text-[10px] font-mono font-bold rounded bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40">
-                    {selectedPlayer.primary_pos}
+                  <span className="px-2 py-0.5 text-xs font-mono font-bold rounded-md bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40">
+                    {activePlayer.primary_pos}
+                  </span>
+                  <span className="px-2 py-0.5 text-xs font-mono font-bold rounded-md bg-yellow-400/20 text-yellow-300 border border-yellow-400/30">
+                    {activePlayer.overall_grade}급 ({activePlayer.overall_score}점)
                   </span>
                 </div>
-                <div className="text-xs text-gray-400 font-mono mt-0.5 flex items-center gap-2">
-                  <span>{selectedPlayer.club}</span>
+                <div className="text-xs text-gray-300 font-mono mt-1 flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-white">{activePlayer.club}</span>
                   <span>•</span>
-                  <span>{selectedPlayer.league}</span>
+                  <span>{activePlayer.league}</span>
                   <span>•</span>
-                  <span className="text-[#00ff88]">€{selectedPlayer.market_value_eur}M</span>
+                  <span>{activePlayer.age}세</span>
                   <span>•</span>
-                  <span className="text-gray-300">종합 {selectedPlayer.overall_grade} ({selectedPlayer.overall_score}점)</span>
+                  <span className="text-[#00ff88] font-bold">몸값 €{activePlayer.market_value_eur}M</span>
                 </div>
               </div>
             ) : (
-              <span className="text-sm text-gray-400">타깃 선수를 선택하세요</span>
+              <span className="text-sm text-gray-400">선수를 검색하여 기준 선수로 선택하세요</span>
             )}
           </div>
 
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#1a1a38] hover:bg-[#222248] text-xs font-mono text-gray-200 border border-[#2a2e5c] transition-colors"
-          >
-            <Search className="w-3.5 h-3.5 text-[#00ff88]" />
-            선수 변경 / 검색
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-          </button>
+          {/* Search Trigger Button */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#1a1a38] to-[#222248] hover:from-[#222248] hover:to-[#2a2a58] text-xs font-mono text-white font-bold border border-[#00ff88]/40 shadow-glow-neon transition-all cursor-pointer"
+            >
+              <Search className="w-4 h-4 text-[#00ff88]" />
+              <span>🔍 선수 검색 / 변경</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
         </div>
 
-        {/* Dropdown Modal / Popover */}
+        {/* Live Search Modal Popover */}
         {isOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 z-50 rounded-xl bg-[#121226] border border-[#2a2e5c] shadow-2xl p-4 max-h-96 flex flex-col">
+          <div className="absolute top-full left-0 right-0 mt-2 z-50 rounded-2xl bg-[#121226] border-2 border-[#00ff88]/40 shadow-2xl p-4 max-h-[420px] flex flex-col backdrop-blur-lg">
             {/* Search Input */}
             <div className="relative mb-3">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#00ff88] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="선수명, 한글명, 구단명, 포지션 검색 (예: 손흥민, 이강인, Son, Haaland, London White)..."
+                placeholder="선수 이름 또는 구단명을 입력하세요 (예: 손흥민, 이강인, Son, Haaland, Real Madrid, Tottenham)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#0a0a16] border border-[#1f2240] rounded-lg pl-9 pr-3 py-2 text-xs font-mono text-white placeholder-gray-500 focus:outline-none focus:border-[#00ff88]"
+                className="w-full bg-[#0a0a16] border border-[#2a2e5c] rounded-xl pl-10 pr-4 py-3 text-sm font-mono text-white placeholder-gray-500 focus:outline-none focus:border-[#00ff88] shadow-inner"
                 autoFocus
               />
+              {isSearching && (
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-[#00ff88] animate-pulse">
+                  검색 중...
+                </span>
+              )}
             </div>
 
             {/* Result count */}
-            <div className="text-[10px] text-gray-400 font-mono mb-2 flex justify-between px-1">
-              <span>검색 결과: <strong className="text-[#00ff88]">{filteredPlayers.length}명</strong></span>
-              {filteredPlayers.length > 100 && <span className="text-gray-400">(상위 100명 표시 중)</span>}
+            <div className="text-[11px] text-gray-400 font-mono mb-2 flex justify-between px-1">
+              <span>검색 결과: <strong className="text-[#00ff88]">{displayResults.length}명</strong></span>
+              <span className="text-gray-500">클릭 시 즉시 해당 선수로 스카우팅 분석 시작</span>
             </div>
 
             {/* Players List */}
-            <div className="overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-              {filteredPlayers.slice(0, 100).map((p) => {
-                const isSelected = p.id === selectedTargetId;
+            <div className="overflow-y-auto space-y-1.5 pr-1 custom-scrollbar max-h-72">
+              {displayResults.map((p) => {
+                const isSelected = p.id === (targetPlayer?.id || selectedTargetId);
                 const flag = countryFlags[p.nationality] || "🌐";
                 return (
                   <button
@@ -153,35 +179,44 @@ export default function TargetSelector({
                       setIsOpen(false);
                       setSearchQuery("");
                     }}
-                    className={`w-full text-left p-2.5 rounded-lg flex items-center justify-between text-xs font-mono transition-colors ${
+                    className={`w-full text-left p-3 rounded-xl flex items-center justify-between text-xs font-mono transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-[#00ff88]/15 border border-[#00ff88]/40 text-white'
-                        : 'hover:bg-[#181832] text-gray-300 border border-transparent'
+                        ? 'bg-[#00ff88]/20 border border-[#00ff88] text-white shadow-glow-neon'
+                        : 'hover:bg-[#1a1a38] text-gray-300 border border-transparent hover:border-[#2a2e5c]'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-sm">{flag}</span>
-                      <span className="font-bold text-white">{p.name}</span>
-                      {p.korean_name && (
-                        <span className="text-[#00ff88] font-sans text-[11px] font-medium">({p.korean_name})</span>
-                      )}
-                      <span className="text-gray-400 font-sans text-[11px] hidden sm:inline">{p.full_name}</span>
-                      <span className="px-1.5 py-0.2 rounded bg-[#1f2240] text-gray-300 text-[10px]">
-                        {p.primary_pos}
-                      </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-base">{flag}</span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-white text-sm">
+                            {p.korean_name || p.name}
+                          </span>
+                          {p.korean_name && (
+                            <span className="text-gray-400 text-xs">({p.name})</span>
+                          )}
+                          <span className="px-1.5 py-0.2 rounded bg-[#00e5ff]/20 text-[#00e5ff] text-[10px] font-bold">
+                            {p.primary_pos}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-gray-400 mt-0.5">
+                          {p.club} • {p.league} • {p.age}세
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-3 text-gray-400">
-                      <span>{p.club}</span>
-                      <span className="text-[#00ff88] font-bold">€{p.market_value_eur}M</span>
-                      <span className="text-xs font-bold text-yellow-400">{p.overall_grade}</span>
+                    <div className="flex items-center gap-3 text-right">
+                      <div>
+                        <div className="text-[#00ff88] font-extrabold text-xs">€{p.market_value_eur}M</div>
+                        <div className="text-[10px] text-yellow-400 font-bold">{p.overall_grade}급 ({p.overall_score}점)</div>
+                      </div>
                     </div>
                   </button>
                 );
               })}
-              {filteredPlayers.length === 0 && (
-                <div className="p-4 text-center text-xs text-gray-500 font-mono">
-                  일치하는 선수가 없습니다.
+              {displayResults.length === 0 && !isSearching && (
+                <div className="p-6 text-center text-xs text-gray-500 font-mono">
+                  검색어와 일치하는 선수가 없습니다. 다른 이름이나 구단명을 입력해보세요.
                 </div>
               )}
             </div>
@@ -189,28 +224,28 @@ export default function TargetSelector({
         )}
       </div>
 
-      {/* Quick Tactical Preset Archetypes */}
-      {archetypes.length > 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          <span className="text-[11px] font-mono text-gray-400 flex items-center gap-1 shrink-0">
-            <Sparkles className="w-3 h-3 text-yellow-400" />
-            전술 롤 프리셋:
-          </span>
-          {archetypes.map((arch) => (
-            <button
-              key={arch.id}
-              onClick={() => onSelectTarget(arch.benchmark_player_id)}
-              className={`shrink-0 px-2.5 py-1 rounded-md text-[11px] font-mono transition-all ${
-                selectedTargetId === arch.benchmark_player_id
-                  ? 'bg-[#00ff88]/20 border border-[#00ff88] text-[#00ff88] font-semibold shadow-glow-neon'
-                  : 'bg-[#121226] border border-[#1f2240] text-gray-400 hover:text-gray-200 hover:border-[#2a2e5c]'
-              }`}
-            >
-              {arch.title.split('/')[0].trim()} ({arch.benchmark_name.split(' ').pop()})
-            </button>
-          ))}
-        </div>
-      )}
+      {/* 2. Quick Star Presets (1-Click Fast Selection) */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 custom-scrollbar">
+        <span className="text-[11px] font-mono text-gray-400 flex items-center gap-1 shrink-0 font-bold">
+          <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+          인기 스타 즉시 분석:
+        </span>
+        {quickStars.map((star) => (
+          <button
+            key={star.id}
+            onClick={() => onSelectTarget(star.id)}
+            className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
+              (targetPlayer?.id || selectedTargetId) === star.id
+                ? 'bg-[#00ff88]/20 border-2 border-[#00ff88] text-[#00ff88] font-bold shadow-glow-neon'
+                : 'bg-[#121226] border border-[#1f2240] text-gray-300 hover:text-white hover:border-[#00ff88]/50 hover:bg-[#161633]'
+            }`}
+          >
+            <span>{star.icon}</span>
+            <span className="font-bold">{star.name}</span>
+            <span className="text-[10px] text-gray-400">({star.sub})</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

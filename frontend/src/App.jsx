@@ -72,8 +72,9 @@ const getGradeBadgeClass = (grade) => {
 export default function App() {
   const [players, setPlayers] = useState([]);
   const [archetypes, setArchetypes] = useState([]);
-  const [targetPlayerId, setTargetPlayerId] = useState("p_odegaard");
+  const [targetPlayerId, setTargetPlayerId] = useState("p_son");
   const [targetPlayer, setTargetPlayer] = useState(null);
+  const [showFilterPanel, setShowFilterPanel] = useState(false);
   
   // Similarity Engine Settings
   const [algorithm, setAlgorithm] = useState("hybrid");
@@ -258,32 +259,52 @@ export default function App() {
             <TargetSelector
               players={players}
               selectedTargetId={targetPlayerId}
+              targetPlayer={targetPlayer}
               onSelectTarget={setTargetPlayerId}
               archetypes={archetypes}
             />
 
+            {/* Collapsible Filter Toggle Bar */}
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setShowFilterPanel(!showFilterPanel)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#121226] hover:bg-[#1a1a38] border border-[#1f2240] hover:border-[#00ff88]/50 text-xs font-mono text-gray-200 transition-all cursor-pointer shadow-md"
+              >
+                <Sliders className="w-3.5 h-3.5 text-[#00ff88]" />
+                <span className="font-bold">
+                  {showFilterPanel ? '▲ 세부 검색 필터 닫기' : '▼ 세부 필터 & AI 알고리즘 설정 (포지션, 나이, 이적료)'}
+                </span>
+              </button>
+
+              <div className="text-[11px] font-mono text-gray-400 hidden sm:block">
+                ⚡ 11,685명 글로벌 선수 풀 실시간 AI 전술 스카우팅
+              </div>
+            </div>
+
             {/* Tactical Filter Controls Panel */}
-            <FilterControls
-              algorithm={algorithm}
-              setAlgorithm={setAlgorithm}
-              hybridBalance={hybridBalance}
-              setHybridBalance={setHybridBalance}
-              sequentialCutoff={sequentialCutoff}
-              setSequentialCutoff={setSequentialCutoff}
-              positionMatch={positionMatch}
-              setPositionMatch={setPositionMatch}
-              maxMarketValue={maxMarketValue}
-              setMaxMarketValue={setMaxMarketValue}
-              maxAge={maxAge}
-              setMaxAge={setMaxAge}
-              leagueTier={leagueTier}
-              setLeagueTier={setLeagueTier}
-              customWeights={customWeights}
-              setCustomWeights={setCustomWeights}
-              onResetFilters={handleResetFilters}
-              onRunScouting={runScouting}
-              loading={loading}
-            />
+            {showFilterPanel && (
+              <FilterControls
+                algorithm={algorithm}
+                setAlgorithm={setAlgorithm}
+                hybridBalance={hybridBalance}
+                setHybridBalance={setHybridBalance}
+                sequentialCutoff={sequentialCutoff}
+                setSequentialCutoff={setSequentialCutoff}
+                positionMatch={positionMatch}
+                setPositionMatch={setPositionMatch}
+                maxMarketValue={maxMarketValue}
+                setMaxMarketValue={setMaxMarketValue}
+                maxAge={maxAge}
+                setMaxAge={setMaxAge}
+                leagueTier={leagueTier}
+                setLeagueTier={setLeagueTier}
+                customWeights={customWeights}
+                setCustomWeights={setCustomWeights}
+                onResetFilters={handleResetFilters}
+                onRunScouting={runScouting}
+                loading={loading}
+              />
+            )}
 
             {/* Dashboard Workspace */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

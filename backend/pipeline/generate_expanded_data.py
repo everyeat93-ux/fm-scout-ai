@@ -34,11 +34,11 @@ def get_mega_player_dataset():
         })
 
     # 1. KOREAN & ASIAN STARS
-    add_p("p_son", "H. M. Son", "Son Heung-min", "손흥민", 32, "South Korea", "KR", "Tottenham Hotspur", "Premier League", 1, "ST", "LW", "FW", "Both", 183, 45.0, 230.0, 2026,
+    add_p("p_son", "H. M. Son", "Son Heung-min", "손흥민", 33, "South Korea", "KR", "Tottenham Hotspur (LAFC)", "Premier League", 1, "ST", "LW", "FW", "Both", 183, 45.0, 230.0, 2026,
           "양발 피니셔 & 인디펜던트 스코어러 (Two-Footed Finisher)",
           {"kp": 2.4, "prog_p": 4.1, "pass_acc": 82.5, "passes_att": 35.0, "through_balls": 0.55, "crosses_box": 1.2, "shots": 2.8, "box_shots": 2.2, "sot_pct": 48.5, "xg": 0.52, "npxg": 0.44, "goals": 0.55, "dribbles": 2.2, "dribble_pct": 54.0, "carry_dist": 250.0, "fouls_drawn": 1.6, "prog_carries": 4.6, "interceptions": 0.5, "tackles_won": 0.9, "clearances": 0.4, "blocks": 0.5, "recoveries": 3.8, "aerial_pct": 36.0, "ground_duels": 4.8, "aerial_duels": 0.6, "pressures": 14.5})
 
-    add_p("p_lee_kangin", "K. I. Lee", "Lee Kang-in", "이강인", 23, "South Korea", "KR", "Paris Saint-Germain", "Ligue 1", 1, "AM", "RW", "MF", "Left", 173, 25.0, 80.0, 2028,
+    add_p("p_lee_kangin", "K. I. Lee", "Lee Kang-in", "이강인", 24, "South Korea", "KR", "Atlético Madrid (PSG)", "La Liga", 1, "AM", "RW", "MF", "Left", 173, 35.0, 95.0, 2028,
           "탈압박 찬스메이커 & 왼발 플레이메이커 (Press-Resistant Playmaker)",
           {"kp": 2.9, "prog_p": 5.8, "pass_acc": 88.2, "passes_att": 52.0, "through_balls": 0.72, "crosses_box": 1.4, "shots": 1.8, "box_shots": 0.9, "sot_pct": 38.0, "xg": 0.22, "npxg": 0.22, "goals": 0.20, "dribbles": 2.6, "dribble_pct": 66.5, "carry_dist": 240.0, "fouls_drawn": 2.5, "prog_carries": 4.5, "interceptions": 0.8, "tackles_won": 1.4, "clearances": 0.3, "blocks": 0.6, "recoveries": 5.4, "aerial_pct": 30.0, "ground_duels": 5.6, "aerial_duels": 0.3, "pressures": 17.5})
 
