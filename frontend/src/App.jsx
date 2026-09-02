@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Activity, Search, Compass, Shield, Sparkles, Layers, Sliders, 
-  Download, HelpCircle, ArrowRight, CheckCircle2, User, Trophy, Eye, BookOpen
+  Download, HelpCircle, ArrowRight, CheckCircle2, User, Trophy, Eye, BookOpen, RefreshCw
 } from 'lucide-react';
 import TargetSelector from './components/TargetSelector';
 import FilterControls from './components/FilterControls';
