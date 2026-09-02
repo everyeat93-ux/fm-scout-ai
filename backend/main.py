@@ -56,12 +56,19 @@ def on_startup():
     try:
         conn = get_db_connection()
         c = conn.cursor()
+        c.execute("SELECT count(*) FROM players WHERE id LIKE 'p_db_%'")
+        fake_count = c.fetchone()[0]
         c.execute("SELECT count(*) FROM players")
-        count = c.fetchone()[0]
-        if count == 0:
-            print("Database empty, auto-building 100% authentic real player database...")
+        total_count = c.fetchone()[0]
+        
+        # If database has fake synthetic players or is empty, rebuild immediately with 100% real players!
+        if fake_count > 0 or total_count < 100:
+            print(f"Purging legacy synthetic players (found {fake_count}) and building 100% authentic real player database...")
             from pipeline.run_real_db_build import build_100pct_real_database
             build_100pct_real_database()
+            from similarity_engine import get_all_player_feature_vectors
+            get_all_player_feature_vectors(reload=True)
+            print("100% Real Player Database successfully loaded!")
     except Exception as e:
         print(f"Startup DB check error: {e}")
 
