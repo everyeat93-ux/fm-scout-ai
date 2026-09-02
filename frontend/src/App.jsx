@@ -108,7 +108,7 @@ export default function App() {
     const fetchInitialData = async () => {
       try {
         const [playersRes, archRes] = await Promise.all([
-          fetch('/api/players?limit=15000'),
+          fetch('/api/players?limit=200'),
           fetch('/api/archetypes')
         ]);
         const pData = await playersRes.json();

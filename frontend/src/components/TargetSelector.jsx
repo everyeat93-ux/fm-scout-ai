@@ -38,20 +38,34 @@ export default function TargetSelector({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const selectedPlayer = players.find(p => p.id === selectedTargetId) || players[0];
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
 
-  const filteredPlayers = players.filter(p => {
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      p.name.toLowerCase().includes(q) ||
-      p.full_name?.toLowerCase().includes(q) ||
-      p.korean_name?.toLowerCase().includes(q) ||
-      p.club.toLowerCase().includes(q) ||
-      p.primary_pos.toLowerCase().includes(q)
-    );
-  });
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`/api/players?q=${encodeURIComponent(searchQuery)}&limit=100`);
+        const data = await res.json();
+        setSearchResults(data.players || []);
+      } catch (err) {
+        console.error("Search error:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const displayPlayers = searchQuery.trim() ? searchResults : players;
+  const selectedPlayer = players.find(p => p.id === selectedTargetId) || searchResults.find(p => p.id === selectedTargetId) || players[0];
+  const filteredPlayers = displayPlayers;
 
   return (
     <div className="flex flex-col gap-3">
