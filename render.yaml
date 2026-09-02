@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: fm-scout-ai
+    env: docker
+    plan: free
+    region: oregon
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /api/health
