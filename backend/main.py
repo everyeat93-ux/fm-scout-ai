@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from database import get_db_connection, init_db
-from similarity_engine import find_similar_players, compare_two_players, get_all_player_feature_vectors
+from similarity_engine import find_similar_players, compare_two_players, get_all_player_feature_vectors, calculate_manager_tactical_fit
 
 app = FastAPI(
     title="FM Scout AI (FC Finder) API",
