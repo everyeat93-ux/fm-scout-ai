@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   Activity, Search, Compass, Shield, Sparkles, Layers, Sliders, 
-  Download, HelpCircle, ArrowRight, CheckCircle2, User, Trophy, Eye, BookOpen, RefreshCw
+  Download, HelpCircle, ArrowRight, CheckCircle2, User, Trophy, Eye, BookOpen, RefreshCw, Target
 } from 'lucide-react';
 import TargetSelector from './components/TargetSelector';
 import FilterControls from './components/FilterControls';
@@ -96,6 +96,8 @@ export default function App() {
   const [scoutResults, setScoutResults] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [quickFilter, setQuickFilter] = useState("all"); // 'all', 'gems', 'u23', 'top5', 'kleague'
+  const [mobileTab, setMobileTab] = useState("candidates"); // 'target', 'candidates', 'report', 'arena'
 
   // UI Modes
   const [isCompareArenaOpen, setIsCompareArenaOpen] = useState(false);
@@ -148,9 +150,10 @@ export default function App() {
       const data = await res.json();
       if (data.target_player) {
         setTargetPlayer(data.target_player);
-        setScoutResults(data.results || []);
-        if (data.results && data.results.length > 0) {
-          setSelectedCandidate(data.results[0]);
+        const results = data.results || [];
+        setScoutResults(results);
+        if (results && results.length > 0) {
+          setSelectedCandidate(results[0]);
         } else {
           setSelectedCandidate(null);
         }
@@ -166,6 +169,23 @@ export default function App() {
     runScouting();
   }, [runScouting]);
 
+  // Dynamic 1-Click Quick Filtering
+  const filteredScoutResults = useMemo(() => {
+    if (quickFilter === 'gems') {
+      return scoutResults.filter(r => (r.player.market_value_eur <= 25) || (r.gem_score && r.gem_score >= 80));
+    }
+    if (quickFilter === 'u23') {
+      return scoutResults.filter(r => r.player.age <= 23);
+    }
+    if (quickFilter === 'top5') {
+      return scoutResults.filter(r => ['Premier League', 'La Liga', 'Bundesliga', 'Serie A', 'Ligue 1'].includes(r.player.league));
+    }
+    if (quickFilter === 'kleague') {
+      return scoutResults.filter(r => (r.player.league && r.player.league.includes('K-League')) || r.player.nationality === 'South Korea');
+    }
+    return scoutResults;
+  }, [scoutResults, quickFilter]);
+
   const handleResetFilters = () => {
     setAlgorithm("hybrid");
     setHybridBalance(0.5);
@@ -174,13 +194,20 @@ export default function App() {
     setMaxMarketValue(null);
     setMaxAge(null);
     setLeagueTier(null);
+    setQuickFilter("all");
     setCustomWeights({ vision: 1.0, striking: 1.0, dribble: 1.0, defense: 1.0, physical: 1.0 });
+  };
+
+  const handleSelectCandidate = (item) => {
+    setSelectedCandidate(item);
+    setMobileTab('report'); // Seamlessly switches view to report on mobile
   };
 
   const handleOpen1v1Compare = (pA, pB) => {
     setComparePlayerAId(pA || targetPlayerId);
     setComparePlayerBId(pB || (selectedCandidate?.player?.id || "p_stengs"));
     setIsCompareArenaOpen(true);
+    setMobileTab('arena');
   };
 
   return (
@@ -246,72 +273,141 @@ export default function App() {
       </header>
 
       {/* Main Content Area */}
-      <main className="max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 flex-1 flex flex-col gap-6">
+      <main className="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-1 flex flex-col gap-4 sm:gap-6 pb-20 sm:pb-6">
         {/* 1v1 Compare Arena View (if opened) */}
         {isCompareArenaOpen ? (
           <ComparisonArena
             players={players}
             initialPlayerAId={comparePlayerAId}
             initialPlayerBId={comparePlayerBId}
-            onClose={() => setIsCompareArenaOpen(false)}
+            onClose={() => {
+              setIsCompareArenaOpen(false);
+              setMobileTab('candidates');
+            }}
           />
         ) : (
           <>
-            {/* Target Player Selector & Presets */}
-            <TargetSelector
-              players={players}
-              selectedTargetId={targetPlayerId}
-              targetPlayer={targetPlayer}
-              onSelectTarget={setTargetPlayerId}
-              archetypes={archetypes}
-            />
+            {/* Target Player Selector & Presets (Always on Desktop, shown on Mobile if tab is 'target' or default) */}
+            <div className={`flex flex-col gap-4 ${mobileTab === 'target' ? 'block' : 'hidden sm:block'}`}>
+              <TargetSelector
+                players={players}
+                selectedTargetId={targetPlayerId}
+                targetPlayer={targetPlayer}
+                onSelectTarget={(id) => {
+                  setTargetPlayerId(id);
+                  setMobileTab('candidates');
+                }}
+                archetypes={archetypes}
+              />
 
-            {/* Collapsible Filter Toggle Bar */}
-            <div className="flex items-center justify-between">
-              <button
-                onClick={() => setShowFilterPanel(!showFilterPanel)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#121226] hover:bg-[#1a1a38] border border-[#1f2240] hover:border-[#00ff88]/50 text-xs font-mono text-gray-200 transition-all cursor-pointer shadow-md"
-              >
-                <Sliders className="w-3.5 h-3.5 text-[#00ff88]" />
-                <span className="font-bold">
-                  {showFilterPanel ? '▲ 세부 검색 필터 닫기' : '▼ 세부 필터 & AI 알고리즘 설정 (포지션, 나이, 이적료)'}
-                </span>
-              </button>
+              {/* Collapsible Filter Toggle Bar */}
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => setShowFilterPanel(!showFilterPanel)}
+                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#121226] hover:bg-[#1a1a38] border border-[#1f2240] hover:border-[#00ff88]/50 text-xs font-mono text-gray-200 transition-all cursor-pointer shadow-md"
+                >
+                  <Sliders className="w-3.5 h-3.5 text-[#00ff88]" />
+                  <span className="font-bold">
+                    {showFilterPanel ? '▲ 세부 검색 필터 닫기' : '▼ 세부 필터 & AI 가중치 설정'}
+                  </span>
+                </button>
 
-              <div className="text-[11px] font-mono text-gray-400 hidden sm:block">
-                ⚡ 11,685명 글로벌 선수 풀 실시간 AI 전술 스카우팅
+                <div className="text-[11px] font-mono text-gray-400 hidden sm:block">
+                  ⚡ 100% 현역 실데이터 AI 전술 스카우팅 엔진
+                </div>
               </div>
+
+              {/* Tactical Filter Controls Panel */}
+              {showFilterPanel && (
+                <FilterControls
+                  algorithm={algorithm}
+                  setAlgorithm={setAlgorithm}
+                  hybridBalance={hybridBalance}
+                  setHybridBalance={setHybridBalance}
+                  sequentialCutoff={sequentialCutoff}
+                  setSequentialCutoff={setSequentialCutoff}
+                  positionMatch={positionMatch}
+                  setPositionMatch={setPositionMatch}
+                  maxMarketValue={maxMarketValue}
+                  setMaxMarketValue={setMaxMarketValue}
+                  maxAge={maxAge}
+                  setMaxAge={setMaxAge}
+                  leagueTier={leagueTier}
+                  setLeagueTier={setLeagueTier}
+                  customWeights={customWeights}
+                  setCustomWeights={setCustomWeights}
+                  onResetFilters={handleResetFilters}
+                  onRunScouting={runScouting}
+                  loading={loading}
+                />
+              )}
             </div>
 
-            {/* Tactical Filter Controls Panel */}
-            {showFilterPanel && (
-              <FilterControls
-                algorithm={algorithm}
-                setAlgorithm={setAlgorithm}
-                hybridBalance={hybridBalance}
-                setHybridBalance={setHybridBalance}
-                sequentialCutoff={sequentialCutoff}
-                setSequentialCutoff={setSequentialCutoff}
-                positionMatch={positionMatch}
-                setPositionMatch={setPositionMatch}
-                maxMarketValue={maxMarketValue}
-                setMaxMarketValue={setMaxMarketValue}
-                maxAge={maxAge}
-                setMaxAge={setMaxAge}
-                leagueTier={leagueTier}
-                setLeagueTier={setLeagueTier}
-                customWeights={customWeights}
-                setCustomWeights={setCustomWeights}
-                onResetFilters={handleResetFilters}
-                onRunScouting={runScouting}
-                loading={loading}
-              />
-            )}
+            {/* 1-Second One-Click Quick Filter Chips Bar */}
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+              <span className="text-[11px] font-mono text-gray-400 shrink-0 mr-1 hidden sm:inline">⚡ 퀵 필터:</span>
+              
+              <button
+                onClick={() => setQuickFilter('all')}
+                className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all shrink-0 cursor-pointer ${
+                  quickFilter === 'all'
+                    ? 'bg-[#00ff88] text-black font-bold shadow-glow-neon'
+                    : 'bg-[#121226] text-gray-300 border border-[#1f2240] hover:border-[#00ff88]/40'
+                }`}
+              >
+                ✨ 전체 ({scoutResults.length})
+              </button>
+
+              <button
+                onClick={() => setQuickFilter('gems')}
+                className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all shrink-0 flex items-center gap-1 cursor-pointer ${
+                  quickFilter === 'gems'
+                    ? 'bg-amber-400 text-black font-bold shadow-glow-neon'
+                    : 'bg-[#121226] text-amber-300 border border-amber-500/30 hover:border-amber-400/60'
+                }`}
+              >
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                <span>💎 가성비 진주 (≤€25M)</span>
+              </button>
+
+              <button
+                onClick={() => setQuickFilter('u23')}
+                className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all shrink-0 flex items-center gap-1 cursor-pointer ${
+                  quickFilter === 'u23'
+                    ? 'bg-[#00e5ff] text-black font-bold shadow-glow-cyan'
+                    : 'bg-[#121226] text-[#00e5ff] border border-[#00e5ff]/30 hover:border-[#00e5ff]/60'
+                }`}
+              >
+                <span>🌟 U-23 특급 유망주</span>
+              </button>
+
+              <button
+                onClick={() => setQuickFilter('top5')}
+                className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all shrink-0 cursor-pointer ${
+                  quickFilter === 'top5'
+                    ? 'bg-purple-500 text-white font-bold shadow-lg'
+                    : 'bg-[#121226] text-purple-300 border border-purple-500/30 hover:border-purple-400/60'
+                }`}
+              >
+                <span>🇪🇺 유럽 5대 리그</span>
+              </button>
+
+              <button
+                onClick={() => setQuickFilter('kleague')}
+                className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all shrink-0 cursor-pointer ${
+                  quickFilter === 'kleague'
+                    ? 'bg-rose-500 text-white font-bold shadow-lg'
+                    : 'bg-[#121226] text-rose-300 border border-rose-500/30 hover:border-rose-400/60'
+                }`}
+              >
+                <span>🇰🇷 K리그 보석</span>
+              </button>
+            </div>
 
             {/* Dashboard Workspace */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
               {/* Left Column (7 cols): Hero Scout Report Card */}
-              <div className="lg:col-span-7 flex flex-col gap-4">
+              <div className={`lg:col-span-7 flex flex-col gap-4 ${mobileTab === 'report' ? 'block' : 'hidden sm:block'}`}>
                 {selectedCandidate && targetPlayer ? (
                   <ScoutReportCard
                     candidate={selectedCandidate}
@@ -328,11 +424,11 @@ export default function App() {
               </div>
 
               {/* Right Column (5 cols): Candidates Scouting Board */}
-              <div className="lg:col-span-5 flex flex-col gap-3">
+              <div className={`lg:col-span-5 flex flex-col gap-3 ${mobileTab === 'candidates' ? 'block' : 'hidden sm:block'}`}>
                 <div className="flex items-center justify-between px-1">
                   <div className="text-xs font-mono font-bold text-gray-300 flex items-center gap-2">
                     <Trophy className="w-3.5 h-3.5 text-yellow-400" />
-                    유사 선수 랭킹 ({scoutResults.length}명)
+                    유사 선수 랭킹 ({filteredScoutResults.length}명)
                   </div>
                   <span className="text-[11px] font-mono text-gray-400">
                     정렬: 유사도 높은 순
@@ -346,12 +442,12 @@ export default function App() {
                       <div className="text-white font-bold text-sm">실시간 AI 전술 스카우팅 연산 중...</div>
                       <div className="text-[11px] text-gray-400">코사인 전술 스타일 + 유클리드 퍼포먼스 체급 종합 계산 중</div>
                     </div>
-                  ) : scoutResults.length === 0 ? (
+                  ) : filteredScoutResults.length === 0 ? (
                     <div className="p-8 text-center rounded-xl bg-[#121226] border border-[#1f2240] text-gray-400 font-mono text-xs">
-                      조건에 일치하는 선수가 없습니다. 필터 조건을 완화해보세요.
+                      조건에 일치하는 선수가 없습니다. 퀵 필터를 '전체'로 변경해보세요.
                     </div>
                   ) : (
-                    scoutResults.map((item) => {
+                    filteredScoutResults.map((item) => {
                       const p = item.player;
                       const isSelected = selectedCandidate?.player?.id === p.id;
                       const flag = countryFlags[p.nationality] || "🌐";
@@ -360,7 +456,7 @@ export default function App() {
                       return (
                         <div
                           key={p.id}
-                          onClick={() => setSelectedCandidate(item)}
+                          onClick={() => handleSelectCandidate(item)}
                           className={`p-3 sm:p-3.5 rounded-xl transition-all cursor-pointer border ${
                             isSelected
                               ? 'bg-[#161633] border-[#00ff88] shadow-glow-neon ring-1 ring-[#00ff88]/50'
@@ -414,6 +510,14 @@ export default function App() {
                             </div>
                           </div>
 
+                          {/* AI Scout Narrative Briefing Pill */}
+                          {item.ai_briefing && (
+                            <div className="mt-2 text-[11px] text-gray-300 bg-[#0a0a16] px-2.5 py-1.5 rounded-lg border border-[#1f2240] flex items-start gap-1.5 break-keep">
+                              <span className="text-[#00ff88] font-mono font-bold text-[10px] shrink-0 mt-0.5">🤖 AI 코멘트</span>
+                              <span className="leading-snug text-gray-300 line-clamp-2">{item.ai_briefing}</span>
+                            </div>
+                          )}
+
                           {/* Tactical 5-Pillar Clean Badges Bar */}
                           <div className="mt-2.5 pt-2 border-t border-[#1f2240]/70 flex items-center justify-between gap-2 flex-wrap text-[10px] font-mono">
                             <div className="flex items-center gap-1 flex-wrap text-gray-300">
@@ -445,6 +549,60 @@ export default function App() {
           </>
         )}
       </main>
+
+      {/* Floating Mobile Bottom Navigation Bar */}
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0a16]/95 backdrop-blur-xl border-t border-[#1f2240] px-3 py-2 flex items-center justify-around shadow-2xl">
+        <button
+          onClick={() => {
+            setIsCompareArenaOpen(false);
+            setMobileTab('target');
+          }}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-mono transition-colors cursor-pointer ${
+            mobileTab === 'target' && !isCompareArenaOpen ? 'text-[#00ff88] font-bold' : 'text-gray-400'
+          }`}
+        >
+          <Target className="w-4 h-4" />
+          <span>타겟 선수</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setIsCompareArenaOpen(false);
+            setMobileTab('candidates');
+          }}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-mono transition-colors cursor-pointer ${
+            mobileTab === 'candidates' && !isCompareArenaOpen ? 'text-[#00ff88] font-bold' : 'text-gray-400'
+          }`}
+        >
+          <Trophy className="w-4 h-4" />
+          <span>스카우트 랭킹</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setIsCompareArenaOpen(false);
+            setMobileTab('report');
+          }}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-mono transition-colors cursor-pointer ${
+            mobileTab === 'report' && !isCompareArenaOpen ? 'text-[#00e5ff] font-bold' : 'text-gray-400'
+          }`}
+        >
+          <Activity className="w-4 h-4" />
+          <span>정밀 리포트</span>
+        </button>
+
+        <button
+          onClick={() => {
+            handleOpen1v1Compare(targetPlayerId, selectedCandidate?.player?.id);
+          }}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-mono transition-colors cursor-pointer ${
+            isCompareArenaOpen ? 'text-[#00e5ff] font-bold' : 'text-gray-400'
+          }`}
+        >
+          <Layers className="w-4 h-4" />
+          <span>1v1 아레나</span>
+        </button>
+      </nav>
 
       {/* Footer & License Attribution Bar */}
       <footer className="border-t border-[#1f2240] bg-[#0a0a16] py-5 px-4 lg:px-8 mt-auto">

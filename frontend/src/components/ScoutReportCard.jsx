@@ -185,6 +185,22 @@ export default function ScoutReportCard({
           </div>
         </div>
 
+        {/* AI Tactical One-Liner Briefing Banner */}
+        {candidate?.ai_briefing && (
+          <div className="mb-4 p-3 rounded-xl bg-gradient-to-r from-[#00ff88]/15 via-[#00e5ff]/10 to-[#121226] border border-[#00ff88]/30 flex items-start gap-2.5 shadow-md">
+            <Sparkles className="w-4 h-4 text-[#00ff88] mt-0.5 shrink-0 animate-pulse" />
+            <div className="min-w-0">
+              <div className="text-[10px] font-mono font-bold text-[#00ff88] uppercase tracking-wider flex items-center gap-1.5">
+                <span>AI SCOUT TACTICAL BRIEFING</span>
+                <span className="px-1.5 py-0.2 rounded bg-[#00ff88]/20 text-[#00ff88] text-[9px]">실시간 전술 총평</span>
+              </div>
+              <div className="text-xs sm:text-sm text-gray-200 mt-1 font-sans leading-relaxed break-keep">
+                {candidate.ai_briefing}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Main Grid: Left Profile + Right Dual Radar */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 items-center">
           {/* Left Column: Player Silhouette & Core Metadata */}

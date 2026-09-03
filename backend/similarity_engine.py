@@ -153,6 +153,36 @@ def compute_euclidean_similarity(vec_a: np.ndarray, vec_b: np.ndarray, max_possi
     similarity_pct = max(0.0, min(100.0, (1.0 - (dist / 140.0)) * 100.0))
     return round(similarity_pct, 1), round(dist, 2)
 
+def generate_ai_scout_briefing(target: Dict[str, Any], cand: Dict[str, Any], sim_pct: float, cos_pct: float, euc_pct: float, diff: Dict[str, float]) -> str:
+    """Generates an insightful, human-readable Korean AI scouting briefing."""
+    target_name = target.get("korean_name") or target.get("name")
+    
+    strengths = []
+    if diff.get("dribbles_completed", 0) > 0.4:
+        strengths.append("민첩한 온더볼 드리블 돌파력")
+    elif diff.get("key_passes", 0) > 0.3 or diff.get("progressive_passes", 0) > 0.8:
+        strengths.append("창의적인 찬스 메이킹 & 전진 패스")
+    elif diff.get("shots", 0) > 0.3 or diff.get("box_shots", 0) > 0.3:
+        strengths.append("과감한 박스 침투 및 슈팅 결정력")
+    elif diff.get("ground_duels_won", 0) > 0.6 or diff.get("aerial_won_pct", 0) > 5.0:
+        strengths.append("강인한 신체 경합 및 제공권 우위")
+    elif (diff.get("tackles_won", 0) + diff.get("interceptions", 0)) > 0.5:
+        strengths.append("적극적인 전방 압박 & 수비 기여도")
+    
+    val_note = ""
+    if cand.get("market_value_eur", 0) < target.get("market_value_eur", 0) * 0.5:
+        val_note = "이적료 대비 가성비가 극대화된"
+    elif cand.get("age", 25) <= 23:
+        val_note = "향후 폭발적 성장이 기대되는 U-23"
+    else:
+        val_note = "전술 스타일이 정밀하게 일치하는"
+
+    if strengths:
+        highlight = strengths[0]
+        return f"{target_name} 대비 {highlight}을(를) 갖추고 전술 스타일 {int(cos_pct)}% 일치하는 {val_note} 자원"
+    else:
+        return f"{target_name}의 전술 롤과 퍼포먼스 체급을 종합 {int(sim_pct)}% 재현하는 {val_note} 대체 자원"
+
 def find_similar_players(
     target_player_id: str,
     algorithm: str = "hybrid", # "hybrid", "sequential", "cosine", "euclidean"
@@ -168,11 +198,6 @@ def find_similar_players(
 ) -> Dict[str, Any]:
     """
     Executes player scouting similarity search based on target player profile.
-    Supports:
-    - 'hybrid': Weighted ensemble of Cosine (style) and Euclidean (volume)
-    - 'sequential': 2-stage scouting (1st stage Cosine filter >= cutoff, 2nd stage Euclidean volume rank)
-    - 'cosine': Pure style pattern similarity
-    - 'euclidean': Pure volume & performance capacity similarity
     """
     all_players = get_all_player_feature_vectors()
     player_dict = {p["id"]: p for p in all_players}
@@ -183,10 +208,6 @@ def find_similar_players(
     target = player_dict[target_player_id]
     vectors, _, _ = calculate_normalized_vectors(all_players, custom_weights)
     target_vec = vectors[target_player_id]
-
-    # Calculate theoretical maximum distance for Euclidean normalization
-    dim = len(TACTICAL_FEATURE_KEYS)
-    max_possible_dist = math.sqrt(dim * (100.0 ** 2))
 
     # Candidate filtering
     candidates = []
@@ -204,7 +225,6 @@ def find_similar_players(
                 # Also check cross-group versatility (e.g. AM in MF vs W in FW)
                 if not (target["primary_pos"] in ["AM", "W"] and p["primary_pos"] in ["AM", "W"]):
                     continue
-        # If 'all', no position filter applied
 
         # Age filter
         if max_age is not None and p["age"] > max_age:
@@ -226,7 +246,7 @@ def find_similar_players(
 
         # Calculate both similarity dimensions
         cos_sim = compute_cosine_similarity(target_vec, cand_vec)
-        euc_sim, raw_dist = compute_euclidean_similarity(target_vec, cand_vec, max_possible_dist)
+        euc_sim, raw_dist = compute_euclidean_similarity(target_vec, cand_vec)
 
         algo_lower = algorithm.lower()
         if algo_lower == "hybrid":
@@ -273,6 +293,8 @@ def find_similar_players(
             age_bonus = max(0, (26 - p["age"]) * 2.0)
             value_score = round(sim_pct * 0.7 + value_ratio * 20.0 + age_bonus, 1)
 
+        ai_briefing = generate_ai_scout_briefing(target, p, sim_pct, cos_sim, euc_sim, stat_diff)
+
         candidates.append({
             "player": p,
             "similarity_pct": sim_pct,
@@ -282,7 +304,8 @@ def find_similar_players(
             "metric_type": metric_label,
             "metric_raw": metric_val,
             "gem_score": value_score,
-            "stat_diff": stat_diff
+            "stat_diff": stat_diff,
+            "ai_briefing": ai_briefing
         })
 
     # Sort results by similarity percentage descending
