@@ -661,7 +661,7 @@ def build_100pct_real_database():
                     "Phil Foden": "p_foden",
                     "Cole Palmer": "p_palmer",
                     "Mohamed Salah": "p_salah",
-                    "Virgil van Dijk": "p_vandijk",
+                    "Virgil van Dijk": "p_van_dijk",
                     "Florian Wirtz": "p_wirtz",
                     "Harry Kane": "p_kane",
                     "Jamal Musiala": "p_musiala",
@@ -671,6 +671,9 @@ def build_100pct_real_database():
                     "Gavi": "p_gavi",
                     "Antoine Griezmann": "p_griezmann",
                     "Julián Álvarez": "p_julian_alvarez",
+                    "Takefusa Kubo": "p_kubo",
+                    "Rodrigo Hernández": "p_rodri",
+                    "Vinícius Júnior": "p_vinicius",
                     "Lautaro Martínez": "p_lautaro",
                     "Rafael Leão": "p_leao",
                     "Dušan Vlahović": "p_vlahovic",
@@ -719,12 +722,15 @@ def build_100pct_real_database():
 
                 stats = generate_stats_by_profile(profile, rep, name)
 
+                # 2026/2027 Season: Age calculation (+2 from 2024 basis)
+                current_2026_age = age + 2
+
                 player_obj = {
                     "id": p_id,
                     "name": name,
                     "full_name": full_name,
                     "korean_name": kor_name,
-                    "age": age,
+                    "age": current_2026_age,
                     "nationality": p_nat,
                     "nat_code": p_code,
                     "club": club_name,
@@ -737,7 +743,7 @@ def build_100pct_real_database():
                     "height_cm": height,
                     "market_value_eur": val_m,
                     "wage_eur_pw": wage_k,
-                    "contract_until": 2027,
+                    "contract_until": 2028,
                     "tactical_role": role,
                     "stats": {
                         "matches": 30,
