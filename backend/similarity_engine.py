@@ -177,11 +177,52 @@ def generate_ai_scout_briefing(target: Dict[str, Any], cand: Dict[str, Any], sim
     else:
         val_note = "전술 스타일이 정밀하게 일치하는"
 
-    if strengths:
-        highlight = strengths[0]
-        return f"{target_name} 대비 {highlight}을(를) 갖추고 전술 스타일 {int(cos_pct)}% 일치하는 {val_note} 자원"
-    else:
-        return f"{target_name}의 전술 롤과 퍼포먼스 체급을 종합 {int(sim_pct)}% 재현하는 {val_note} 대체 자원"
+def calculate_manager_tactical_fit(player: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Calculates tactical compatibility scores (0-100) across 5 world-class managerial systems:
+    1. Pep Guardiola (Positional Play & Inverted Buildup)
+    2. Ange Postecoglou / Hansi Flick (High Gegenpress & Direct Vertical Transition)
+    3. Diego Simeone (Compact Low-Block & Physical Counter-Attack)
+    4. Mikel Arteta (Positional Control & Dual Dominance)
+    5. Carlo Ancelotti (Individual Freedom & Dynamic Flare)
+    """
+    vis = float(player.get("vision_score", 50))
+    stk = float(player.get("striking_score", 50))
+    drb = float(player.get("dribble_score", 50))
+    dfn = float(player.get("defense_score", 50))
+    phy = float(player.get("physical_score", 50))
+    pass_acc = float(player.get("pass_completion_pct", 80))
+
+    # Pep: Heavy on Vision & Pass Accuracy & Dribble escape
+    pep_score = round(min(99.0, vis * 0.35 + pass_acc * 0.25 + drb * 0.20 + dfn * 0.20), 1)
+    
+    # Ange / Flick: Heavy on Physical Stamina, Dribble, Striking & Pressing
+    ange_score = round(min(99.0, phy * 0.30 + drb * 0.25 + stk * 0.25 + vis * 0.20), 1)
+    
+    # Simeone: Heavy on Defense, Physical Duels & Discipline
+    simeone_score = round(min(99.0, dfn * 0.40 + phy * 0.35 + stk * 0.15 + vis * 0.10), 1)
+    
+    # Arteta: Structured Positional, High Passing & Defensive balance
+    arteta_score = round(min(99.0, vis * 0.30 + dfn * 0.25 + pass_acc * 0.25 + phy * 0.20), 1)
+    
+    # Ancelotti: Attacking flare, individual brilliance & striking
+    ancelotti_score = round(min(99.0, stk * 0.35 + drb * 0.35 + vis * 0.20 + phy * 0.10), 1)
+
+    managers = [
+        {"id": "pep", "name": "펩 과르디올라", "club": "맨체스터 시티", "style": "점유율 & 인버티드 빌드업", "score": pep_score, "color": "#00e5ff"},
+        {"id": "ange", "name": "엔제 포스테코글루", "club": "토트넘 홋스퍼", "style": "고강도 압박 & 초고속 전환", "score": ange_score, "color": "#00ff88"},
+        {"id": "simeone", "name": "디에고 시메오네", "club": "아틀레티코 마드리드", "style": "두 줄 질식 수비 & 경합", "score": simeone_score, "color": "#ff3366"},
+        {"id": "arteta", "name": "미켈 아르테타", "club": "아스널", "style": "정밀 포지셔널 플레이", "score": arteta_score, "color": "#ffaa00"},
+        {"id": "ancelotti", "name": "카를로 안첼로티", "club": "레알 마드리드", "style": "자율 크랙 & 다이내믹 공격", "score": ancelotti_score, "color": "#b066ff"}
+    ]
+    
+    managers.sort(key=lambda x: x["score"], reverse=True)
+    best_fit = managers[0]
+
+    return {
+        "best_fit": best_fit,
+        "managers": managers
+    }
 
 def find_similar_players(
     target_player_id: str,
@@ -294,6 +335,7 @@ def find_similar_players(
             value_score = round(sim_pct * 0.7 + value_ratio * 20.0 + age_bonus, 1)
 
         ai_briefing = generate_ai_scout_briefing(target, p, sim_pct, cos_sim, euc_sim, stat_diff)
+        manager_fit = calculate_manager_tactical_fit(p)
 
         candidates.append({
             "player": p,
@@ -305,7 +347,8 @@ def find_similar_players(
             "metric_raw": metric_val,
             "gem_score": value_score,
             "stat_diff": stat_diff,
-            "ai_briefing": ai_briefing
+            "ai_briefing": ai_briefing,
+            "manager_fit": manager_fit
         })
 
     # Sort results by similarity percentage descending
@@ -313,6 +356,7 @@ def find_similar_players(
 
     return {
         "target_player": target,
+        "target_manager_fit": calculate_manager_tactical_fit(target),
         "algorithm": algorithm,
         "hybrid_balance": hybrid_balance,
         "sequential_cutoff": sequential_cutoff,

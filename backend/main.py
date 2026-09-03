@@ -179,6 +179,7 @@ def get_player(player_id: str):
         raise HTTPException(status_code=404, detail=f"Player with ID '{player_id}' not found.")
 
     p_dict = dict(row)
+    manager_fit = calculate_manager_tactical_fit(p_dict)
     
     # Structure radar metrics
     radar_data = [
@@ -191,7 +192,8 @@ def get_player(player_id: str):
 
     return {
         "player": p_dict,
-        "radar_data": radar_data
+        "radar_data": radar_data,
+        "manager_fit": manager_fit
     }
 
 @app.post("/api/scout/similar")

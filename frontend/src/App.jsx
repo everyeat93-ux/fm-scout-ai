@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   Activity, Search, Compass, Shield, Sparkles, Layers, Sliders, 
-  Download, HelpCircle, ArrowRight, CheckCircle2, User, Trophy, Eye, BookOpen, RefreshCw, Target
+  Download, HelpCircle, ArrowRight, CheckCircle2, User, Trophy, Eye, BookOpen, RefreshCw, Target, Star
 } from 'lucide-react';
 import TargetSelector from './components/TargetSelector';
 import FilterControls from './components/FilterControls';
@@ -9,6 +9,7 @@ import ScoutReportCard from './components/ScoutReportCard';
 import ComparisonArena from './components/ComparisonArena';
 import LegalModal from './components/LegalModal';
 import MetricGuideModal from './components/MetricGuideModal';
+import ShortlistModal from './components/ShortlistModal';
 
 const countryFlags = {
   "South Korea": "🇰🇷",
@@ -98,6 +99,36 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [quickFilter, setQuickFilter] = useState("all"); // 'all', 'gems', 'u23', 'top5', 'kleague'
   const [mobileTab, setMobileTab] = useState("candidates"); // 'target', 'candidates', 'report', 'arena'
+
+  // Shortlist Bookmarks State (with LocalStorage persistence)
+  const [bookmarkedPlayerIds, setBookmarkedPlayerIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem('fm_scout_bookmarks');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [isShortlistOpen, setIsShortlistOpen] = useState(false);
+
+  const toggleBookmark = useCallback((playerId) => {
+    setBookmarkedPlayerIds((prev) => {
+      const next = prev.includes(playerId)
+        ? prev.filter((id) => id !== playerId)
+        : [...prev, playerId];
+      try {
+        localStorage.setItem('fm_scout_bookmarks', JSON.stringify(next));
+      } catch (e) {}
+      return next;
+    });
+  }, []);
+
+  const clearAllBookmarks = useCallback(() => {
+    setBookmarkedPlayerIds([]);
+    try {
+      localStorage.removeItem('fm_scout_bookmarks');
+    } catch (e) {}
+  }, []);
 
   // UI Modes
   const [isCompareArenaOpen, setIsCompareArenaOpen] = useState(false);
@@ -240,12 +271,19 @@ export default function App() {
           {/* Action Buttons */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <button
+              onClick={() => setIsShortlistOpen(true)}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 text-[11px] sm:text-xs font-mono font-medium border border-amber-400/30 transition-all shadow-glow-neon whitespace-nowrap cursor-pointer"
+            >
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              <span>쇼트리스트 ({bookmarkedPlayerIds.length})</span>
+            </button>
+
+            <button
               onClick={() => setIsMetricGuideOpen(true)}
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#00ff88]/10 hover:bg-[#00ff88]/20 text-[#00ff88] text-[11px] sm:text-xs font-mono font-medium border border-[#00ff88]/30 transition-all shadow-glow-neon whitespace-nowrap cursor-pointer"
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">전술 지표 가이드</span>
-              <span className="sm:hidden">가이드</span>
+              <span className="hidden sm:inline">전술 가이드</span>
             </button>
 
             <button
@@ -415,6 +453,8 @@ export default function App() {
                     similarityPct={selectedCandidate.similarity_pct}
                     algorithm={algorithm}
                     onCompareDirectly={handleOpen1v1Compare}
+                    isBookmarked={bookmarkedPlayerIds.includes(selectedCandidate?.player?.id)}
+                    onToggleBookmark={toggleBookmark}
                   />
                 ) : (
                   <div className="p-12 text-center rounded-xl bg-[#121226] border border-[#1f2240] text-gray-400 font-mono text-xs">
@@ -450,6 +490,7 @@ export default function App() {
                     filteredScoutResults.map((item) => {
                       const p = item.player;
                       const isSelected = selectedCandidate?.player?.id === p.id;
+                      const isBookmarked = bookmarkedPlayerIds.includes(p.id);
                       const flag = countryFlags[p.nationality] || "🌐";
                       const isTopGem = item.gem_score && item.gem_score > 90;
 
@@ -484,6 +525,11 @@ export default function App() {
                                   {isTopGem && (
                                     <span className="px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 text-[10px] font-mono flex items-center gap-0.5 shrink-0 whitespace-nowrap">
                                       <Sparkles className="w-2.5 h-2.5" /> 진주
+                                    </span>
+                                  )}
+                                  {item.manager_fit?.best_fit && (
+                                    <span className="px-1.5 py-0.2 rounded bg-amber-400/10 text-amber-300 text-[10px] font-mono border border-amber-400/30 flex items-center gap-0.5 shrink-0 whitespace-nowrap">
+                                      👑 {item.manager_fit.best_fit.name.split(' ')[0]} {item.manager_fit.best_fit.score}점
                                     </span>
                                   )}
                                 </div>
@@ -528,16 +574,34 @@ export default function App() {
                               <span className="px-1.5 py-0.5 rounded bg-[#0a0a16] border border-[#1f2240]">💪 경합 {p.physical_grade}</span>
                             </div>
 
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleOpen1v1Compare(targetPlayerId, p.id);
-                              }}
-                              className="px-2 py-0.5 rounded bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] text-[10px] font-mono border border-[#00e5ff]/30 flex items-center gap-1 shrink-0 transition-colors ml-auto cursor-pointer"
-                            >
-                              <span>1v1 비교</span>
-                              <ArrowRight className="w-2.5 h-2.5" />
-                            </button>
+                            <div className="flex items-center gap-1.5 ml-auto">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleBookmark(p.id);
+                                }}
+                                className={`px-2 py-0.5 rounded text-[10px] font-mono border flex items-center gap-1 shrink-0 transition-colors cursor-pointer ${
+                                  isBookmarked
+                                    ? 'bg-amber-400/20 text-amber-300 border-amber-400 shadow-glow-neon'
+                                    : 'bg-[#0a0a16] hover:bg-[#181832] text-gray-400 border-[#1f2240]'
+                                }`}
+                                title="관심 선수 쇼트리스트에 담기"
+                              >
+                                <Star className={`w-2.5 h-2.5 ${isBookmarked ? 'fill-amber-400 text-amber-400' : ''}`} />
+                                <span>{isBookmarked ? '찜함' : '찜'}</span>
+                              </button>
+
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpen1v1Compare(targetPlayerId, p.id);
+                                }}
+                                className="px-2 py-0.5 rounded bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] text-[10px] font-mono border border-[#00e5ff]/30 flex items-center gap-1 shrink-0 transition-colors cursor-pointer"
+                              >
+                                <span>1v1 비교</span>
+                                <ArrowRight className="w-2.5 h-2.5" />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       );
@@ -562,7 +626,7 @@ export default function App() {
           }`}
         >
           <Target className="w-4 h-4" />
-          <span>타겟 선수</span>
+          <span>타겟</span>
         </button>
 
         <button
@@ -575,7 +639,7 @@ export default function App() {
           }`}
         >
           <Trophy className="w-4 h-4" />
-          <span>스카우트 랭킹</span>
+          <span>랭킹</span>
         </button>
 
         <button
@@ -588,7 +652,17 @@ export default function App() {
           }`}
         >
           <Activity className="w-4 h-4" />
-          <span>정밀 리포트</span>
+          <span>리포트</span>
+        </button>
+
+        <button
+          onClick={() => setIsShortlistOpen(true)}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-mono transition-colors cursor-pointer ${
+            bookmarkedPlayerIds.length > 0 ? 'text-amber-300 font-bold' : 'text-gray-400'
+          }`}
+        >
+          <Star className={`w-4 h-4 ${bookmarkedPlayerIds.length > 0 ? 'fill-amber-400 text-amber-400' : ''}`} />
+          <span>찜 ({bookmarkedPlayerIds.length})</span>
         </button>
 
         <button
@@ -600,7 +674,7 @@ export default function App() {
           }`}
         >
           <Layers className="w-4 h-4" />
-          <span>1v1 아레나</span>
+          <span>1v1</span>
         </button>
       </nav>
 
@@ -618,6 +692,22 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Shortlist Modal */}
+      <ShortlistModal
+        isOpen={isShortlistOpen}
+        onClose={() => setIsShortlistOpen(false)}
+        bookmarkedPlayerIds={bookmarkedPlayerIds}
+        allPlayers={players}
+        onRemoveBookmark={toggleBookmark}
+        onClearAllBookmarks={clearAllBookmarks}
+        onSelectAsTarget={(id) => {
+          setTargetPlayerId(id);
+          setMobileTab('candidates');
+        }}
+        onOpen1v1Compare={handleOpen1v1Compare}
+        targetPlayerId={targetPlayerId}
+      />
 
       {/* Legal & Compliance Modal */}
       <LegalModal

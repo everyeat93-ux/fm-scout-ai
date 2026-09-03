@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
-import { Download, Share2, Sparkles, TrendingUp, Shield, Zap, Crosshair, Award, ArrowUpRight, ArrowDownRight, Layers } from 'lucide-react';
+import { Download, Share2, Sparkles, TrendingUp, Shield, Zap, Crosshair, Award, ArrowUpRight, ArrowDownRight, Layers, Star } from 'lucide-react';
 import RadarChartCanvas from './RadarChartCanvas';
 
 // Flag mapping helper
@@ -74,7 +74,9 @@ export default function ScoutReportCard({
   targetPlayer,
   similarityPct = 94.2,
   algorithm = "cosine",
-  onCompareDirectly
+  onCompareDirectly,
+  isBookmarked = false,
+  onToggleBookmark
 }) {
   const cardRef = useRef(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -145,6 +147,19 @@ export default function ScoutReportCard({
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
+          {onToggleBookmark && (
+            <button
+              onClick={() => onToggleBookmark(player.id)}
+              className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded bg-[#181832] hover:bg-[#202046] text-xs font-mono border transition-all cursor-pointer ${
+                isBookmarked
+                  ? 'border-amber-400 text-amber-400'
+                  : 'border-[#1f2240] text-gray-400'
+              }`}
+            >
+              <Star className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-amber-400 text-amber-400' : ''}`} />
+              <span className="hidden sm:inline">{isBookmarked ? '찜 완료' : '관심 선수 찜'}</span>
+            </button>
+          )}
           {onCompareDirectly && (
             <button
               onClick={() => onCompareDirectly(targetPlayer.id, player.id)}
@@ -319,6 +334,54 @@ export default function ScoutReportCard({
             />
           </div>
         </div>
+
+        {/* World-Class Manager Tactical System Fit Section */}
+        {candidate?.manager_fit && (
+          <div className="mt-4 pt-3.5 border-t border-[#1f2240]">
+            <div className="flex items-center justify-between mb-2.5 flex-wrap gap-1.5">
+              <div className="text-xs font-mono font-bold text-gray-300 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>[ 세계 5대 명장 감독 전술 시스템 적합도 ]</span>
+              </div>
+              {candidate.manager_fit.best_fit && (
+                <div className="px-2.5 py-0.5 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 text-[10px] font-mono font-bold flex items-center gap-1">
+                  <span>👑 {candidate.manager_fit.best_fit.name} 최적합 ({candidate.manager_fit.best_fit.score}점)</span>
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 font-mono text-xs">
+              {candidate.manager_fit.managers.map((mgr) => {
+                const isBest = candidate.manager_fit.best_fit?.id === mgr.id;
+                return (
+                  <div
+                    key={mgr.id}
+                    className={`p-2 sm:p-2.5 rounded-xl border flex flex-col justify-between gap-1 transition-all ${
+                      isBest
+                        ? 'bg-[#181838] border-amber-400/60 shadow-glow-neon ring-1 ring-amber-400/30'
+                        : 'bg-[#0e0e22] border-[#1f2240]'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-white text-[11px] truncate">{mgr.name}</span>
+                        <span className="text-[10px] text-gray-400">{mgr.club.split(' ')[0]}</span>
+                      </div>
+                      <div className="text-[9px] text-gray-400 truncate font-sans mt-0.5">{mgr.style}</div>
+                    </div>
+
+                    <div className="flex items-baseline justify-between mt-1 pt-1 border-t border-[#1f2240]/60">
+                      <span className="text-[10px] text-gray-400">적합도</span>
+                      <span className={`text-xs sm:text-sm font-extrabold ${isBest ? 'text-amber-300' : 'text-[#00ff88]'}`}>
+                        {mgr.score}점
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Detailed Per-90 Factual Stats Comparison Table */}
         <div className="mt-4 pt-3.5 border-t border-[#1f2240]">
