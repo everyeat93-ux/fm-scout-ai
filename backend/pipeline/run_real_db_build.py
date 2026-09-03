@@ -94,27 +94,42 @@ EPL_SQUADS = [
         ("F. Chiesa", "Federico Chiesa", "페데리코 키에사", 26, "Italy", "IT", "W", "ST", "FW", "Right", 175, 30.0, 120.0, "폭발적인 직선 가속 & 슈터", "winger_elite")
     ]),
 
-    ("Tottenham Hotspur", "Premier League", 1, "England", "GB-ENG", 90, [
+    ("Tottenham Hotspur", "Premier League", 1, "England", "GB-ENG", 92, [
         ("H. M. Son", "Son Heung-min", "손흥민", 33, "South Korea", "KR", "ST", "LW", "FW", "Both", 183, 45.0, 230.0, "양발 피니셔 & 인디펜던트 스코어러", "st_worldclass"),
+        ("M. Mudryk", "Mykhailo Mudryk", "미하일로 무드리크", 23, "Ukraine", "UA", "W", "LW", "FW", "Right", 175, 35.0, 100.0, "초음속 스프린터 & 측면 돌파", "winger_solid"),
+        ("Sávio", "Sávio Moreira", "사비뉴", 20, "Brazil", "BR", "W", "RW", "FW", "Left", 176, 87.7, 30.0, "화려한 개인기 & 측면 크랙", "winger_wonderkid"),
+        ("S. Tonali", "Sandro Tonali", "산드로 토날리", 24, "Italy", "IT", "CM", "DM", "MF", "Right", 181, 108.0, 120.0, "이탈리아 전술 레지스타 & 패서", "cm_worldclass"),
+        ("D. Solanke", "Dominic Solanke", "도미닉 솔랑케", 26, "England", "GB-ENG", "ST", "CF", "FW", "Right", 187, 45.0, 140.0, "컴플리트 포워드 & 전방 압박 머신", "st_elite"),
         ("J. Maddison", "James Maddison", "제임스 매디슨", 27, "England", "GB-ENG", "AM", "CM", "MF", "Right", 175, 70.0, 170.0, "창의적 플레이메이커 & 데드볼 마스터", "am_elite"),
-        ("C. Romero", "Cristian Romero", "크리스티안 로메로", 26, "Argentina", "AR", "CB", "DF", "DF", "Right", 185, 65.0, 165.0, "공격적 전진 태클러 & 월드컵 위너", "cb_elite"),
         ("M. van de Ven", "Micky van de Ven", "미키 판 더 펜", 23, "Netherlands", "NL", "CB", "LB", "DF", "Left", 193, 55.0, 50.0, "유럽 최고 속도 센터백 & 커버링", "cb_elite"),
         ("D. Kulusevski", "Dejan Kulusevski", "데얀 쿨루셉스키", 24, "Sweden", "SE", "AM", "RW", "MF", "Left", 186, 55.0, 110.0, "파워풀 인사이드 드리블러 & 기회 창출", "winger_elite"),
-        ("D. Solanke", "Dominic Solanke", "도미닉 솔랑케", 26, "England", "GB-ENG", "ST", "CF", "FW", "Right", 187, 45.0, 140.0, "컴플리트 포워드 & 전방 압박 머신", "st_elite"),
-        ("G. Vicario", "Guglielmo Vicario", "굴리엘모 비카리오", 27, "Italy", "IT", "GK", "GK", "GK", "Right", 194, 35.0, 75.0, "동물적 반사신경 & 롱리치 세이브", "gk_elite"),
+        ("A. Robertson", "Andrew Robertson", "앤드루 로버트슨", 30, "Scotland", "GB-SCT", "LB", "DF", "DF", "Left", 178, 20.0, 100.0, "무한 체력 & 정밀 얼리 크로서", "fb_elite"),
         ("D. Udogie", "Destiny Udogie", "데스티니 우도기", 21, "Italy", "IT", "LB", "LWB", "DF", "Left", 188, 45.0, 75.0, "인버티드 공격 풀백 & 신체 경합", "fb_elite"),
         ("P. Porro", "Pedro Porro", "페드로 포로", 24, "Spain", "ES", "RB", "RWB", "DF", "Right", 173, 45.0, 85.0, "공격형 윙백 & 오른발 캐넌 크로서", "fb_elite"),
         ("R. Bentancur", "Rodrigo Bentancur", "로드리고 벤탄쿠르", 27, "Uruguay", "UY", "CM", "DM", "MF", "Right", 187, 35.0, 100.0, "중원 탈압박 & 밸런스 조율", "cm_elite"),
-        ("Y. Bissouma", "Yves Bissouma", "이브 비수마", 27, "Mali", "ML", "DM", "CM", "MF", "Right", 182, 35.0, 100.0, "수비 지우개 & 볼 탈취 스페셜리스트", "dm_elite"),
-        ("P. M. Sarr", "Pape Matar Sarr", "파페 마타르 사르", 21, "Senegal", "SN", "CM", "AM", "MF", "Right", 184, 40.0, 30.0, "에너제틱 박스투박스 & 침투", "cm_wonderkid"),
-        ("Richarlison", "Richarlison de Andrade", "히샬리송", 27, "Brazil", "BR", "ST", "LW", "FW", "Right", 184, 38.0, 90.0, "투지 넘치는 득점원 & 헤더", "st_solid"),
         ("B. Johnson", "Brennan Johnson", "브레넌 존슨", 23, "Wales", "GB-WLS", "W", "RW", "FW", "Right", 179, 48.0, 70.0, "라인 브레이킹 & 뒷공간 침투", "winger_solid"),
-        ("T. Werner", "Timo Werner", "티모 베르너", 28, "Germany", "DE", "W", "ST", "FW", "Right", 180, 17.0, 165.0, "스프린트 & 측면 공간 어시스트", "winger_solid"),
         ("R. Drăgușin", "Radu Drăgușin", "라두 드라구신", 22, "Romania", "RO", "CB", "DF", "DF", "Right", 191, 25.0, 50.0, "공중 장악 파이터 센터백", "cb_solid"),
         ("L. Bergvall", "Lucas Bergvall", "루카스 베리발", 18, "Sweden", "SE", "CM", "AM", "MF", "Right", 187, 12.0, 20.0, "북유럽 골든보이 & 전술 테크니션", "cm_wonderkid"),
         ("A. Gray", "Archie Gray", "아치 그레이", 18, "England", "GB-ENG", "DM", "RB", "MF", "Right", 187, 25.0, 35.0, "잉글랜드 최고 유망주 미드필더", "dm_wonderkid"),
-        ("D. Spence", "Djed Spence", "제드 스펜스", 24, "England", "GB-ENG", "FB", "RB", "DF", "Right", 185, 8.0, 25.0, "다이내믹 오버래퍼 & 측면 스프린터", "fb_solid"),
-        ("M. H. Yang", "Yang Min-hyeok", "양민혁", 18, "South Korea", "KR", "W", "RW", "FW", "Right", 174, 4.0, 10.0, "원더키드 윙어 & 폭발적 돌파", "winger_wonderkid")
+        ("M. H. Yang", "Yang Min-hyeok", "양민혁", 18, "South Korea", "KR", "W", "RW", "FW", "Right", 174, 5.0, 10.0, "원더키드 윙어 & 폭발적 돌파", "winger_wonderkid")
+    ]),
+
+    ("Arsenal", "Premier League", 1, "England", "GB-ENG", 96, [
+        ("B. Saka", "Bukayo Saka", "부카요 사카", 23, "England", "GB-ENG", "W", "RW", "FW", "Left", 178, 140.0, 300.0, "월드클래스 인버티드 윙어 & 크랙", "winger_elite"),
+        ("M. Ødegaard", "Martin Ødegaard", "마르틴 외데고르", 25, "Norway", "NO", "AM", "CM", "MF", "Left", 178, 110.0, 290.0, "탈압박 찬스메이커 & 플레이메이커", "am_elite"),
+        ("D. Rice", "Declan Rice", "데클란 라이스", 25, "England", "GB-ENG", "DM", "CM", "MF", "Right", 185, 120.0, 240.0, "전천후 박스투박스 & 수비형 앵커", "dm_elite"),
+        ("B. Guimarães", "Bruno Guimarães", "브루누 기마랑이스", 26, "Brazil", "BR", "CM", "DM", "MF", "Right", 182, 87.5, 160.0, "플레이메이킹 앵커맨 & 중원 사령관", "cm_worldclass"),
+        ("W. Saliba", "William Saliba", "윌리엄 살리바", 23, "France", "FR", "CB", "DF", "DF", "Right", 192, 80.0, 190.0, "괴물형 스토퍼 & 라인 컨트롤러", "cb_elite"),
+        ("Gabriel", "Gabriel Magalhães", "가브리에우 마갈량이스", 26, "Brazil", "BR", "CB", "DF", "DF", "Left", 190, 75.0, 180.0, "파이터형 센터백 & 공중볼 지배자", "cb_elite"),
+        ("E. Konsa", "Ezri Konsa", "에즈리 콘사", 26, "England", "GB-ENG", "CB", "RB", "DF", "Right", 183, 60.0, 100.0, "안정적인 1대1 수비수", "cb_elite"),
+        ("P. Hincapié", "Piero Hincapié", "피에로 인카피에", 22, "Ecuador", "EC", "CB", "LB", "DF", "Left", 184, 40.0, 75.0, "남미 최고 신성 왼발 센터백", "cb_elite"),
+        ("K. Havertz", "Kai Havertz", "카이 하베르츠", 25, "Germany", "DE", "ST", "AM", "FW", "Left", 193, 75.0, 280.0, "공간 창출 펄스나인 & 박스 타깃", "st_elite"),
+        ("G. Martinelli", "Gabriel Martinelli", "가브리엘 마르티넬리", 23, "Brazil", "BR", "W", "LW", "FW", "Right", 178, 60.0, 180.0, "폭발적 스피드 & 다이내믹 윙어", "winger_elite"),
+        ("D. Raya", "David Raya", "다비드 라야", 29, "Spain", "ES", "GK", "GK", "GK", "Right", 183, 40.0, 120.0, "스위퍼 키퍼 & 후방 빌드업 배급원", "gk_elite"),
+        ("R. Calafiori", "Riccardo Calafiori", "리카르도 칼라피오리", 22, "Italy", "IT", "LB", "CB", "DF", "Left", 188, 45.0, 120.0, "전진형 레프트백 & 현대적 수비수", "fb_elite"),
+        ("M. Merino", "Mikel Merino", "미켈 메리노", 28, "Spain", "ES", "CM", "DM", "MF", "Left", 188, 50.0, 130.0, "경합 지배자 & 박스투박스 미드필더", "cm_elite"),
+        ("B. White", "Ben White", "벤 화이트", 26, "England", "GB-ENG", "FB", "CB", "DF", "Right", 186, 55.0, 150.0, "오버래핑 풀백 & 빌드업 라이트백", "fb_elite"),
+        ("J. Timber", "Jurriën Timber", "위리엔 팀버", 23, "Netherlands", "NL", "FB", "CB", "DF", "Right", 179, 45.0, 120.0, "인버티드 풀백 & 전술 유연성", "fb_elite")
     ]),
 
     ("Chelsea", "Premier League", 1, "England", "GB-ENG", 91, [
@@ -231,6 +246,7 @@ LALIGA_SQUADS = [
         ("F. Valverde", "Federico Valverde", "페데리코 발베르데", 26, "Uruguay", "UY", "CM", "RW", "MF", "Right", 182, 130.0, 320.0, "캐넌 중거리포 & 무한동력 엔진", "cm_worldclass"),
         ("E. Camavinga", "Eduardo Camavinga", "에두아르도 카마빙가", 21, "France", "FR", "CM", "LB", "MF", "Left", 182, 100.0, 240.0, "천재적 탈압박 & 유연한 수비력", "cm_elite"),
         ("A. Tchouaméni", "Aurélien Tchouaméni", "오렐리앵 추아메니", 24, "France", "FR", "DM", "CB", "MF", "Right", 187, 100.0, 240.0, "중원 통곡의 벽 & 수비 앵커", "dm_elite"),
+        ("D. Dumfries", "Denzel Dumfries", "덴젤 둠프리스", 28, "Netherlands", "NL", "RB", "RWB", "DF", "Right", 188, 25.0, 120.0, "파워풀 직선 오버래퍼", "fb_elite"),
         ("T. Courtois", "Thibaut Courtois", "티보 쿠르투아", 32, "Belgium", "BE", "GK", "GK", "GK", "Left", 200, 25.0, 290.0, "월드 넘버원 슛스토퍼", "gk_worldclass"),
         ("A. Rüdiger", "Antonio Rüdiger", "안토니오 뤼디거", 31, "Germany", "DE", "CB", "DF", "DF", "Right", 190, 25.0, 280.0, "투사형 센터백 & 초고속 스프린터", "cb_elite"),
         ("É. Militão", "Éder Militão", "에데르 밀리탕", 26, "Brazil", "BR", "CB", "RB", "DF", "Right", 186, 60.0, 280.0, "탄력적 운동능력 & 1v1 수비", "cb_elite"),
@@ -244,31 +260,32 @@ LALIGA_SQUADS = [
 
     ("FC Barcelona", "La Liga", 1, "Spain", "ES", 96, [
         ("L. Yamal", "Lamine Yamal", "라민 야말", 17, "Spain", "ES", "W", "RW", "FW", "Left", 178, 150.0, 30.0, "유로 2024 도움왕 & 축구 신동", "winger_worldclass"),
-        ("R. Lewandowski", "Robert Lewandowski", "로베르트 레반도프스키", 36, "Poland", "PL", "ST", "CF", "FW", "Right", 185, 15.0, 400.0, "골 결정력의 신 & 완벽한 9번", "st_worldclass"),
+        ("G. Jesus", "Gabriel Jesus", "가브리엘 제주스", 27, "Brazil", "BR", "ST", "W", "FW", "Right", 175, 40.0, 200.0, "박스 연계 & 드리블 슬래셔", "st_elite"),
+        ("A. Gordon", "Anthony Gordon", "앤서니 고든", 23, "England", "GB-ENG", "W", "LW", "FW", "Right", 183, 80.0, 120.0, "지치지 않는 스프린트 & 1대1 돌파", "winger_elite"),
         ("Raphinha", "Raphael Dias Belloli", "하피냐", 27, "Brazil", "BR", "W", "LW", "FW", "Left", 176, 60.0, 240.0, "고감도 킥력 & 전방 압박 엔진", "winger_worldclass"),
         ("Pedri", "Pedro González López", "페드리", 21, "Spain", "ES", "CM", "AM", "MF", "Right", 174, 80.0, 180.0, "이니에스타의 후계자 & 템포 마스터", "cm_worldclass"),
         ("Gavi", "Pablo Martín Páez Gavira", "가비", 20, "Spain", "ES", "CM", "AM", "MF", "Right", 173, 90.0, 135.0, "불꽃 같은 투지 & 전방위 프레서", "cm_elite"),
         ("D. Olmo", "Dani Olmo", "다니 올모", 26, "Spain", "ES", "AM", "LW", "MF", "Right", 179, 60.0, 180.0, "유로 2024 득점왕 & 파이널 서드 마에스트로", "am_worldclass"),
         ("F. de Jong", "Frenkie de Jong", "프렝키 더 용", 27, "Netherlands", "NL", "CM", "DM", "MF", "Right", 181, 70.0, 360.0, "후방 빌드업 탈압박 1인자", "cm_worldclass"),
+        ("J. Cancelo", "João Cancelo", "주앙 칸셀루", 30, "Portugal", "PT", "FB", "RB", "DF", "Right", 182, 25.0, 150.0, "인버티드 플레이메이커 풀백", "fb_worldclass"),
         ("J. Koundé", "Jules Koundé", "쥘 쿤데", 25, "France", "FR", "RB", "CB", "DF", "Right", 180, 55.0, 260.0, "월드클래스 대인방어 라이트백", "fb_elite"),
         ("P. Cubarsí", "Pau Cubarsí", "파우 쿠바르시", 17, "Spain", "ES", "CB", "DF", "DF", "Right", 184, 40.0, 20.0, "천재적 롱패스 빌드업 신성 센터백", "cb_wonderkid"),
         ("A. Balde", "Alejandro Balde", "알레한드로 발데", 20, "Spain", "ES", "LB", "LWB", "DF", "Left", 175, 40.0, 30.0, "초고속 스프린트 오버래퍼", "fb_elite"),
         ("M. ter Stegen", "Marc-André ter Stegen", "마르크-안드레 테어 슈테겐", 32, "Germany", "DE", "GK", "GK", "GK", "Right", 187, 20.0, 120.0, "바르사 캡틴 & 빌드업 키퍼", "gk_elite"),
-        ("Fermín", "Fermín López", "페르민 로페스", 21, "Spain", "ES", "AM", "CM", "MF", "Right", 174, 30.0, 15.0, "올림픽 득점왕 & 박스 침투 피니셔", "am_elite"),
-        ("M. Casadó", "Marc Casadó", "마르크 카사도", 21, "Spain", "ES", "DM", "CM", "MF", "Right", 172, 15.0, 10.0, "라 마시아 출신 차세대 앵커", "dm_wonderkid"),
-        ("F. Torres", "Ferran Torres", "페란 토레스", 24, "Spain", "ES", "ST", "W", "FW", "Right", 184, 30.0, 190.0, "오프더볼 침투 스트라이커", "st_solid")
+        ("Fermín", "Fermín López", "페르민 로페스", 21, "Spain", "ES", "AM", "CM", "MF", "Right", 174, 30.0, 15.0, "올림픽 득점왕 & 박스 침투 피니셔", "am_elite")
     ]),
 
-    ("Atlético Madrid", "La Liga", 1, "Spain", "ES", 92, [
-        ("A. Griezmann", "Antoine Griezmann", "앙투안 그리즈만", 33, "France", "FR", "AM", "ST", "FW", "Left", 176, 25.0, 240.0, "라리가 최고 플레이메이커 & 찬스 창출", "am_worldclass"),
+    ("Atlético Madrid", "La Liga", 1, "Spain", "ES", 93, [
+        ("K. I. Lee", "Lee Kang-in", "이강인", 23, "South Korea", "KR", "AM", "RW", "MF", "Left", 173, 40.0, 100.0, "탈압박 찬스메이커 & 왼발 플레이메이커", "am_elite"),
         ("J. Álvarez", "Julián Álvarez", "훌리안 알바레스", 24, "Argentina", "AR", "ST", "AM", "FW", "Right", 170, 90.0, 250.0, "월드컵 & 트레블 위너 만능 포워드", "st_worldclass"),
         ("A. Sørloth", "Alexander Sørloth", "알렉산더 쇠를로트", 28, "Norway", "NO", "ST", "CF", "FW", "Left", 195, 25.0, 75.0, "거구의 타깃터 & 폭격기", "st_elite"),
+        ("C. Romero", "Cristian Romero", "크리스티안 로메로", 26, "Argentina", "AR", "CB", "DF", "DF", "Right", 185, 50.0, 165.0, "공격적 전진 태클러 & 월드컵 위너", "cb_elite"),
+        ("J. David", "Jonathan David", "조너선 데이비드", 24, "Canada", "CA", "ST", "CF", "FW", "Both", 177, 50.0, 120.0, "치명적 침투 골잡이", "st_elite"),
         ("R. De Paul", "Rodrigo De Paul", "로드리고 데 파울", 30, "Argentina", "AR", "CM", "MF", "MF", "Right", 180, 30.0, 130.0, "메시의 호위무사 & 중원 사령관", "cm_elite"),
         ("C. Gallagher", "Conor Gallagher", "코너 갤러거", 24, "England", "GB-ENG", "CM", "AM", "MF", "Right", 182, 50.0, 120.0, "지치지 않는 압박 & 투지의 미드필더", "cm_elite"),
         ("Koke", "Jorge Resurrección Merodio", "코케", 32, "Spain", "ES", "CM", "DM", "MF", "Right", 176, 12.0, 160.0, "아틀레티코의 영원한 캡틴", "cm_solid"),
         ("P. Barrios", "Pablo Barrios", "파블로 바리오스", 21, "Spain", "ES", "CM", "DM", "MF", "Right", 181, 30.0, 20.0, "올림픽 금메달 미드필더", "cm_wonderkid"),
         ("R. Le Normand", "Robin Le Normand", "로뱅 르 노르망", 27, "Spain", "ES", "CB", "DF", "DF", "Right", 187, 40.0, 90.0, "유로 2024 주전 센터백 & 공중볼", "cb_elite"),
-        ("J. M. Giménez", "José María Giménez", "호세 마리아 히메네스", 29, "Uruguay", "UY", "CB", "DF", "DF", "Right", 185, 22.0, 135.0, "우루과이 파이터 수비수", "cb_elite"),
         ("J. Oblak", "Jan Oblak", "얀 오블락", 31, "Slovenia", "SI", "GK", "GK", "GK", "Right", 188, 28.0, 200.0, "사모라상 5회 수상 통곡의 벽", "gk_worldclass"),
         ("M. Llorente", "Marcos Llorente", "마르코스 요렌테", 29, "Spain", "ES", "RB", "CM", "DF", "Right", 184, 30.0, 140.0, "초인적 기동력 & 멀티 플레이어", "fb_elite"),
         ("S. Lino", "Samuel Lino", "사무엘 리누", 24, "Brazil", "BR", "LB", "LW", "DF", "Right", 178, 30.0, 45.0, "폭풍 드리블 윙백", "fb_elite")

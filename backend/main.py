@@ -54,21 +54,24 @@ class CompareRequest(BaseModel):
 def on_startup():
     init_db()
     try:
+        from pipeline.run_real_db_build import build_100pct_real_database
+        from similarity_engine import get_all_player_feature_vectors
         conn = get_db_connection()
         c = conn.cursor()
         c.execute("SELECT count(*) FROM players WHERE id LIKE 'p_db_%'")
         fake_count = c.fetchone()[0]
         c.execute("SELECT count(*) FROM players")
         total_count = c.fetchone()[0]
+        c.execute("SELECT club FROM players WHERE id = 'p_lee_kangin'")
+        row = c.fetchone()
         
-        # If database has fake synthetic players or is empty, rebuild immediately with 100% real players!
-        if fake_count > 0 or total_count < 100:
-            print(f"Purging legacy synthetic players (found {fake_count}) and building 100% authentic real player database...")
-            from pipeline.run_real_db_build import build_100pct_real_database
+        # If database has fake synthetic players or is missing latest FotMob transfers, rebuild!
+        if fake_count > 0 or total_count < 100 or not row or "Atl" not in str(row[0]):
+            print("Synchronizing 100% authentic real player database with latest FotMob transfers...")
             build_100pct_real_database()
-            from similarity_engine import get_all_player_feature_vectors
             get_all_player_feature_vectors(reload=True)
             print("100% Real Player Database successfully loaded!")
+        conn.close()
     except Exception as e:
         print(f"Startup DB check error: {e}")
 
