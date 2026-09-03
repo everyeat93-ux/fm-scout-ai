@@ -186,58 +186,60 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0a0a16] text-[#e2e8f0] flex flex-col font-sans">
       {/* Top Tactical Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-[#0a0a16]/90 backdrop-blur-md border-b border-[#1f2240] px-4 lg:px-8 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-[#0a0a16]/95 backdrop-blur-md border-b border-[#1f2240] px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           {/* Logo & Subtitle */}
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#00ff88] to-[#00e5ff] p-0.5 shadow-glow-neon">
-              <div className="w-full h-full bg-[#0a0a16] rounded-[7px] flex items-center justify-center">
-                <Activity className="w-5 h-5 text-[#00ff88]" />
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-[#00ff88] to-[#00e5ff] p-0.5 shadow-glow-neon shrink-0">
+              <div className="w-full h-full bg-[#0a0a16] rounded-[6px] sm:rounded-[7px] flex items-center justify-center">
+                <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-[#00ff88]" />
               </div>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-extrabold text-base tracking-tight text-white">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="font-mono font-extrabold text-sm sm:text-base tracking-tight text-white whitespace-nowrap">
                   FM SCOUT <span className="text-[#00ff88]">AI</span>
                 </span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#181832] text-[#00e5ff] border border-[#2a2e5c]">
-                  FC FINDER v2.4
+                <span className="px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-mono font-bold bg-[#181832] text-[#00e5ff] border border-[#2a2e5c] shrink-0">
+                  v2.4
                 </span>
               </div>
-              <p className="text-[10px] font-mono text-gray-400">
-                Wyscout / Metrica Nexus Tactical Engine • Zero-Cost Static Architecture
+              <p className="text-[10px] font-mono text-gray-400 hidden sm:block truncate">
+                Wyscout / Metrica Nexus Tactical Engine • 100% Real Football Database
               </p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <button
               onClick={() => setIsMetricGuideOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00ff88]/10 hover:bg-[#00ff88]/20 text-[#00ff88] text-xs font-mono font-medium border border-[#00ff88]/30 transition-all shadow-glow-neon"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#00ff88]/10 hover:bg-[#00ff88]/20 text-[#00ff88] text-[11px] sm:text-xs font-mono font-medium border border-[#00ff88]/30 transition-all shadow-glow-neon whitespace-nowrap cursor-pointer"
             >
               <BookOpen className="w-3.5 h-3.5" />
-              전술 지표 가이드
+              <span className="hidden sm:inline">전술 지표 가이드</span>
+              <span className="sm:hidden">가이드</span>
             </button>
 
             <button
               onClick={() => setIsCompareArenaOpen(!isCompareArenaOpen)}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all ${
+              className={`flex items-center gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono transition-all whitespace-nowrap cursor-pointer ${
                 isCompareArenaOpen
                   ? 'bg-[#00e5ff] text-black font-bold shadow-glow-cyan'
                   : 'bg-[#121226] text-gray-300 border border-[#1f2240] hover:border-[#2a2e5c]'
               }`}
             >
               <Layers className="w-3.5 h-3.5 text-[#00e5ff]" />
-              1v1 비교 아레나
+              <span className="hidden sm:inline">1v1 비교 아레나</span>
+              <span className="sm:hidden">1v1 비교</span>
             </button>
 
             <button
               onClick={() => setIsLegalModalOpen(true)}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#121226] hover:bg-[#181832] text-gray-400 hover:text-white text-xs font-mono border border-[#1f2240] transition-colors"
+              className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-[#121226] hover:bg-[#181832] text-gray-400 hover:text-white text-[11px] sm:text-xs font-mono border border-[#1f2240] transition-colors whitespace-nowrap cursor-pointer"
             >
               <Shield className="w-3.5 h-3.5 text-gray-400" />
-              라이선스
+              <span className="hidden sm:inline">라이선스</span>
             </button>
           </div>
         </div>
@@ -339,99 +341,105 @@ export default function App() {
 
                 <div className="space-y-2.5 max-h-[750px] overflow-y-auto pr-1">
                   {loading ? (
-                    <div className="p-12 text-center rounded-xl bg-[#121226] border border-[#00ff88]/30 text-gray-300 font-mono text-xs flex flex-col items-center justify-center gap-3 shadow-glow-neon animate-pulse">
+                    <div className="p-10 text-center rounded-xl bg-[#121226] border border-[#00ff88]/30 text-gray-300 font-mono text-xs flex flex-col items-center justify-center gap-3 shadow-glow-neon animate-pulse">
                       <RefreshCw className="w-7 h-7 text-[#00ff88] animate-spin" />
-                      <div className="text-white font-bold">11,685명 글로벌 선수 풀 스카우팅 연산 중...</div>
-                      <div className="text-[11px] text-gray-400">코사인 전술 스타일 + 유클리드 퍼포먼스 체급 계산 중</div>
+                      <div className="text-white font-bold text-sm">실시간 AI 전술 스카우팅 연산 중...</div>
+                      <div className="text-[11px] text-gray-400">코사인 전술 스타일 + 유클리드 퍼포먼스 체급 종합 계산 중</div>
                     </div>
                   ) : scoutResults.length === 0 ? (
                     <div className="p-8 text-center rounded-xl bg-[#121226] border border-[#1f2240] text-gray-400 font-mono text-xs">
                       조건에 일치하는 선수가 없습니다. 필터 조건을 완화해보세요.
                     </div>
                   ) : (
-                    scoutResults.map((item, idx) => {
+                    scoutResults.map((item) => {
                       const p = item.player;
                       const isSelected = selectedCandidate?.player?.id === p.id;
                       const flag = countryFlags[p.nationality] || "🌐";
                       const isTopGem = item.gem_score && item.gem_score > 90;
 
-                    return (
-                      <div
-                        key={p.id}
-                        onClick={() => setSelectedCandidate(item)}
-                        className={`p-3.5 rounded-xl transition-all cursor-pointer border ${
-                          isSelected
-                            ? 'bg-[#161633] border-[#00ff88] shadow-glow-neon'
-                            : 'bg-[#121226] border-[#1f2240] hover:border-[#2a2e5c] hover:bg-[#15152c]'
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          {/* Player Basic Info */}
-                          <div className="flex items-center gap-3">
-                            <span className="text-lg">{flag}</span>
-                            <div>
-                              <div className="flex items-center gap-1.5">
-                                <span className="font-bold text-white text-sm tracking-tight">{p.name}</span>
-                                {p.korean_name && (
-                                  <span className="text-[#00ff88] text-xs font-sans font-medium">({p.korean_name})</span>
-                                )}
-                                <span className="px-1.5 py-0.2 rounded bg-[#00e5ff]/15 text-[#00e5ff] text-[10px] font-mono font-bold">
-                                  {p.primary_pos}
-                                </span>
-                                {isTopGem && (
-                                  <span className="px-1.5 py-0.2 rounded bg-yellow-400/20 text-yellow-300 text-[10px] font-mono flex items-center gap-0.5">
-                                    <Sparkles className="w-2.5 h-2.5" /> 진주
+                      return (
+                        <div
+                          key={p.id}
+                          onClick={() => setSelectedCandidate(item)}
+                          className={`p-3 sm:p-3.5 rounded-xl transition-all cursor-pointer border ${
+                            isSelected
+                              ? 'bg-[#161633] border-[#00ff88] shadow-glow-neon ring-1 ring-[#00ff88]/50'
+                              : 'bg-[#121226] border-[#1f2240] hover:border-[#2a2e5c] hover:bg-[#15152c]'
+                          }`}
+                        >
+                          {/* Card Top: Identity & Match Score */}
+                          <div className="flex items-start justify-between gap-2.5">
+                            {/* Player Basic Info */}
+                            <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                              <span className="text-base sm:text-lg shrink-0 mt-0.5">{flag}</span>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <span className="font-bold text-white text-xs sm:text-sm tracking-tight break-keep">
+                                    {p.korean_name || p.name}
                                   </span>
-                                )}
+                                  {p.korean_name && (
+                                    <span className="text-gray-400 text-[11px] font-mono shrink-0">
+                                      ({p.name})
+                                    </span>
+                                  )}
+                                  <span className="px-1.5 py-0.2 rounded bg-[#00e5ff]/20 text-[#00e5ff] text-[10px] font-mono font-bold shrink-0">
+                                    {p.primary_pos}
+                                  </span>
+                                  {isTopGem && (
+                                    <span className="px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300 text-[10px] font-mono flex items-center gap-0.5 shrink-0 whitespace-nowrap">
+                                      <Sparkles className="w-2.5 h-2.5" /> 진주
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-[11px] text-gray-400 font-mono mt-0.5 flex items-center gap-1.5 flex-wrap break-keep">
+                                  <span className="text-gray-300 font-medium">{p.club}</span>
+                                  <span className="text-gray-600">•</span>
+                                  <span>{p.league}</span>
+                                  <span className="text-gray-600">•</span>
+                                  <span>{p.age}세</span>
+                                  <span className="text-gray-600">•</span>
+                                  <span className="text-[#00ff88] font-bold">€{p.market_value_eur}M</span>
+                                </div>
                               </div>
-                              <div className="text-xs text-gray-400 font-mono mt-0.5">
-                                {p.club} • {p.league} • {p.age}세
+                            </div>
+
+                            {/* Match % & Sub-Metrics */}
+                            <div className="text-right shrink-0">
+                              <div className="text-base sm:text-lg font-extrabold font-mono text-[#00ff88] tracking-tight">
+                                {(Number(item.similarity_pct) || 0).toFixed(1)}%
+                              </div>
+                              <div className="text-[10px] font-mono text-gray-400 whitespace-nowrap">
+                                스타일 <span className="text-[#00ff88]">{(Number(item.cosine_pct) || 0).toFixed(0)}%</span> • 체급 <span className="text-[#00e5ff]">{(Number(item.euclidean_pct) || 0).toFixed(0)}%</span>
                               </div>
                             </div>
                           </div>
 
-                          {/* Match % & Gem Score */}
-                          <div className="text-right">
-                            <div className="text-base font-extrabold font-mono text-[#00ff88]">
-                              {(Number(item.similarity_pct) || 0).toFixed(1)}%
+                          {/* Tactical 5-Pillar Clean Badges Bar */}
+                          <div className="mt-2.5 pt-2 border-t border-[#1f2240]/70 flex items-center justify-between gap-2 flex-wrap text-[10px] font-mono">
+                            <div className="flex items-center gap-1 flex-wrap text-gray-300">
+                              <span className="px-1.5 py-0.5 rounded bg-[#0a0a16] border border-[#1f2240]">🪄 패스 {p.vision_grade}</span>
+                              <span className="px-1.5 py-0.5 rounded bg-[#0a0a16] border border-[#1f2240]">⚽ 슈팅 {p.striking_grade}</span>
+                              <span className="px-1.5 py-0.5 rounded bg-[#0a0a16] border border-[#1f2240]">⚡ 드리블 {p.dribble_grade}</span>
+                              <span className="px-1.5 py-0.5 rounded bg-[#0a0a16] border border-[#1f2240]">🛡️ 수비 {p.defense_grade}</span>
+                              <span className="px-1.5 py-0.5 rounded bg-[#0a0a16] border border-[#1f2240]">💪 경합 {p.physical_grade}</span>
                             </div>
-                            <div className="text-[10px] font-mono text-gray-400">
-                              스타일 <span className="text-[#00ff88]">{(Number(item.cosine_pct) || 0).toFixed(0)}%</span> • 체급 <span className="text-[#00e5ff]">{(Number(item.euclidean_pct) || 0).toFixed(0)}%</span>
-                            </div>
-                          </div>
-                        </div>
 
-                        {/* Tactical 5-Pillar Mini Badges Bar */}
-                        <div className="mt-2.5 pt-2 border-t border-[#1f2240]/60 flex items-center justify-between text-[10px] font-mono">
-                          <div className="flex items-center gap-1 text-gray-400">
-                            <span>V:{p.vision_grade}</span>
-                            <span>•</span>
-                            <span>S:{p.striking_grade}</span>
-                            <span>•</span>
-                            <span>D:{p.dribble_grade}</span>
-                            <span>•</span>
-                            <span>Df:{p.defense_grade}</span>
-                            <span>•</span>
-                            <span>P:{p.physical_grade}</span>
-                          </div>
-
-                          <div className="flex items-center gap-2">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleOpen1v1Compare(targetPlayerId, p.id);
                               }}
-                              className="text-gray-400 hover:text-[#00e5ff] text-[10px] flex items-center gap-0.5"
+                              className="px-2 py-0.5 rounded bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] text-[10px] font-mono border border-[#00e5ff]/30 flex items-center gap-1 shrink-0 transition-colors ml-auto cursor-pointer"
                             >
-                              1v1 대조 <ArrowRight className="w-2.5 h-2.5" />
+                              <span>1v1 비교</span>
+                              <ArrowRight className="w-2.5 h-2.5" />
                             </button>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
+                      );
+                    })
+                  )}
+                </div>
               </div>
             </div>
           </>

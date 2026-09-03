@@ -368,27 +368,6 @@ KOREAN_LEAGUE_SQUADS = [
         ("J. H. Jeong", "Jeong Jae-hee", "정재희", 30, "South Korea", "KR", "W", "RW", "FW", "Right", 174, 0.8, 10.0, "극장골 사나이 & 스피드 레이서", "winger_kleague_star"),
         ("H. S. Hong", "Hong Yun-sang", "홍윤상", 22, "South Korea", "KR", "W", "LW", "FW", "Right", 176, 0.8, 6.0, "영플레이어상 후보 & 측면 유망주", "winger_wonderkid")
     ]),
-
-    ("Gangwon FC", "K-League 1", 1, "South Korea", "KR", 74, [
-        ("M. H. Yang", "Yang Min-hyeok", "양민혁", 18, "South Korea", "KR", "W", "RW", "FW", "Right", 174, 4.0, 10.0, "토트넘 입단 확정 & 고교생 돌풍 윙어", "winger_wonderkid"),
-        ("S. H. Lee", "Lee Sang-heon", "이상헌", 26, "South Korea", "KR", "ST", "AM", "FW", "Right", 178, 1.2, 10.0, "K리그 최고 득점 행진 & 감각적 슈터", "st_kleague_star"),
-        ("Gabriel", "Gabriel Oliveira", "가브리엘", 23, "Brazil", "BR", "W", "LW", "FW", "Right", 175, 0.9, 8.0, "파워풀 돌파 윙어", "winger_kleague_star"),
-        ("Y. S. Kim", "Kim Yi-seok", "김이석", 26, "South Korea", "KR", "CM", "DM", "MF", "Right", 176, 0.7, 8.0, "강원 돌풍의 언성 히어로", "cm_kleague_star"),
-        ("M. Tuci", "Marko Tući", "투치", 25, "Montenegro", "ME", "CB", "DF", "DF", "Right", 190, 0.9, 8.0, "몬테네그로 국대 피지컬 센터백", "cb_kleague_star"),
-        ("M. K. Hwang", "Hwang Mun-ki", "황문기", 27, "South Korea", "KR", "RB", "CM", "DF", "Right", 176, 1.0, 10.0, "국가대표 발탁 만능 라이트백", "fb_kleague_star"),
-        ("G. Y. Lee", "Lee Gwang-yeon", "이광연", 24, "South Korea", "KR", "GK", "GK", "GK", "Right", 184, 0.8, 8.0, "빛광연 & U-20 월드컵 영웅", "gk_kleague_star"),
-        ("F. Kovačević", "Franko Kovačević", "코바체비치", 25, "Croatia", "HR", "ST", "CF", "FW", "Right", 186, 0.8, 8.0, "크로아티아 스트라이커", "st_kleague_star")
-    ]),
-
-    ("Gwangju FC", "K-League 1", 1, "South Korea", "KR", 74, [
-        ("J. Asani", "Jasir Asani", "아사니", 29, "Albania", "AL", "W", "RW", "FW", "Left", 175, 1.5, 12.0, "유로 2024 알바니아 주전 & 왼발의 달인", "winger_kleague_star"),
-        ("H. Y. Jeong", "Jeong Ho-yeon", "정호연", 23, "South Korea", "KR", "CM", "DM", "MF", "Right", 180, 1.2, 8.0, "아시안게임 금메달 & 광주 전술 핵심", "cm_kleague_star"),
-        ("H. G. Lee", "Lee Heui-kyun", "이희균", 26, "South Korea", "KR", "AM", "LW", "MF", "Right", 168, 0.8, 8.0, "이정효 축구의 황태자 & 탈압박", "am_kleague_star"),
-        ("T. J. Park", "Park Tae-jun", "박태준", 25, "South Korea", "KR", "CM", "AM", "MF", "Right", 175, 0.7, 7.0, "센스 있는 패스 & 중원 조율", "cm_kleague_star"),
-        ("B. Oliveira", "Bruno Oliveira", "브루노", 28, "Brazil", "BR", "CB", "DF", "DF", "Left", 187, 0.8, 8.0, "왼발 빌드업 센터백", "cb_kleague_star"),
-        ("K. M. Kim", "Kim Kyung-min", "김경민", 32, "South Korea", "KR", "GK", "GK", "GK", "Right", 189, 0.7, 8.0, "스위퍼 키퍼 & 빌드업", "gk_kleague_star")
-    ]),
-
     ("Daejeon Hana Citizen", "K-League 1", 1, "South Korea", "KR", 74, [
         ("Masa", "Masatoshi Ishida", "마사", 29, "Japan", "JP", "AM", "ST", "MF", "Right", 178, 1.0, 10.0, "패배자 발언의 주인공 & 대전의 에이스", "am_kleague_star"),
         ("A. Krivotsyuk", "Anton Krivotsyuk", "안톤", 26, "Azerbaijan", "AZ", "CB", "LB", "DF", "Left", 186, 1.0, 10.0, "아제르바이잔 국대 수비 리더", "cb_kleague_star"),
@@ -463,15 +442,18 @@ WORLD_STARS_SQUADS = [
     ])
 ]
 
-def generate_stats_by_profile(profile: str, rep: int = 80):
-    factor = rep / 85.0
-    
+def generate_stats_by_profile(profile: str, rep: int = 80, name: str = ""):
+    # Deterministic individual variance based on player name hash
+    h = sum(ord(c) for c in name) if name else 42
+    v1 = 1.0 + ((h % 17) - 8) * 0.02   # -16% to +16% variance
+    v2 = 1.0 + (((h * 7) % 19) - 9) * 0.02 # -18% to +18% variance
+
     if "worldclass" in profile or "elite" in profile:
         base_rep = rep
     else:
         base_rep = max(70, rep)
     
-    f = base_rep / 85.0
+    f = (base_rep / 85.0) * v1
     
     # Defaults
     kp = round(1.2 * f, 2)
@@ -486,17 +468,17 @@ def generate_stats_by_profile(profile: str, rep: int = 80):
     xg = round(0.20 * f, 2)
     npxg = round(0.18 * f, 2)
     goals = round(0.20 * f, 2)
-    dribbles = round(1.5 * f, 2)
+    dribbles = round(1.5 * f * v2, 2)
     dribble_pct = round(min(75.0, 52.0 + (base_rep - 75) * 0.4), 1)
-    carry_dist = round(180.0 * f, 1)
+    carry_dist = round(180.0 * f * v2, 1)
     fouls_drawn = round(1.5 * f, 2)
-    prog_carries = round(3.5 * f, 2)
+    prog_carries = round(3.5 * f * v2, 2)
     interceptions = round(1.0 * f, 2)
     tackles_won = round(1.5 * f, 2)
     clearances = round(1.5 * f, 2)
     blocks = round(0.6 * f, 2)
     recoveries = round(5.0 * f, 2)
-    aerial_pct = round(48.0, 1)
+    aerial_pct = round(min(80.0, 48.0 + (h % 20 - 10)), 1)
     ground_duels = round(5.0 * f, 2)
     aerial_duels = round(1.5 * f, 2)
     pressures = round(15.0 * f, 1)
@@ -735,7 +717,7 @@ def build_100pct_real_database():
                         counter += 1
                 seen_ids.add(p_id)
 
-                stats = generate_stats_by_profile(profile, rep)
+                stats = generate_stats_by_profile(profile, rep, name)
 
                 player_obj = {
                     "id": p_id,

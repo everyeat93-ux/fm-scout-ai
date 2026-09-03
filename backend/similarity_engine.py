@@ -133,27 +133,25 @@ def compute_cosine_similarity(vec_a: np.ndarray, vec_b: np.ndarray) -> float:
     """
     Computes Cosine Similarity between vector A and vector B.
     Cosine Similarity = (A . B) / (||A|| * ||B||)
-    Returns percentage value in range [0, 100].
+    Rescales [0.60, 1.0] to [40%, 100%] to provide genuine tactical scouting nuance.
     """
     norm_a = np.linalg.norm(vec_a)
     norm_b = np.linalg.norm(vec_b)
     if norm_a == 0.0 or norm_b == 0.0:
         return 0.0
-    cos_sim = np.dot(vec_a, vec_b) / (norm_a * norm_b)
-    # Cosine is between [-1, 1], here for positive feature vectors it's in [0, 1]
-    pct = float(np.clip(cos_sim * 100.0, 0.0, 100.0))
-    return round(pct, 2)
+    cos_val = float(np.dot(vec_a, vec_b) / (norm_a * norm_b))
+    # Rescale so nuances in shooting/passing/dribble styles are clearly reflected
+    rescaled = 40.0 + max(0.0, min(1.0, (cos_val - 0.60) / 0.40)) * 60.0
+    return round(rescaled, 1)
 
-def compute_euclidean_similarity(vec_a: np.ndarray, vec_b: np.ndarray, max_possible_dist: float) -> (float, float):
+def compute_euclidean_similarity(vec_a: np.ndarray, vec_b: np.ndarray, max_possible_dist: float = 140.0) -> (float, float):
     """
-    Computes Euclidean Distance and converts to normalized similarity percentage:
-    Similarity (%) = max(0, (1 - Distance / Max_Distance) * 100)
+    Computes Euclidean Distance and converts to normalized similarity percentage.
+    Uses practical volume threshold (~140) to reflect performance capacity differences.
     """
     dist = float(np.linalg.norm(vec_a - vec_b))
-    if max_possible_dist == 0:
-        return 0.0, round(dist, 2)
-    similarity_pct = max(0.0, (1.0 - (dist / max_possible_dist)) * 100.0)
-    return round(similarity_pct, 2), round(dist, 2)
+    similarity_pct = max(0.0, min(100.0, (1.0 - (dist / 140.0)) * 100.0))
+    return round(similarity_pct, 1), round(dist, 2)
 
 def find_similar_players(
     target_player_id: str,

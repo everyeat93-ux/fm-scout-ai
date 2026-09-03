@@ -133,35 +133,35 @@ export default function ScoutReportCard({
   return (
     <div className="flex flex-col gap-3 w-full">
       {/* Action Toolbar */}
-      <div className="flex items-center justify-between px-1">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#00ff88]/10 text-[#00ff88] text-xs font-mono font-medium border border-[#00ff88]/30">
-            <Sparkles className="w-3.5 h-3.5" />
-            {candidate.gem_score ? `가성비 진주 지수: ${candidate.gem_score}점` : 'Tactical Profile'}
+            <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+            {candidate.gem_score ? `가성비 진주 지수: ${candidate.gem_score}점` : '전술 프로필'}
           </span>
-          <span className="text-xs text-gray-400 font-mono">
-            {algorithm === 'cosine' ? '📐 Cosine Playstyle Ratio' : '📏 Euclidean Volume Metric'}
+          <span className="text-xs text-gray-400 font-mono hidden sm:inline">
+            {algorithm === 'cosine' ? '📐 Cosine 전술 비율' : '📏 Euclidean 체급 볼륨'}
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {onCompareDirectly && (
             <button
               onClick={() => onCompareDirectly(targetPlayer.id, player.id)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#181832] hover:bg-[#202046] text-xs font-mono text-gray-200 border border-[#1f2240] transition-colors"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 rounded bg-[#181832] hover:bg-[#202046] text-xs font-mono text-gray-200 border border-[#1f2240] transition-colors cursor-pointer"
             >
               <Layers className="w-3.5 h-3.5 text-[#00e5ff]" />
-              1v1 아레나 대조
+              <span>1v1 비교 대조</span>
             </button>
           )}
 
           <button
             onClick={handleSaveCard}
             disabled={isExporting}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-[#00ff88] hover:bg-[#00e577] text-black font-semibold text-xs font-mono shadow-glow-neon transition-all active:scale-95 disabled:opacity-50"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded bg-[#00ff88] hover:bg-[#00e577] text-black font-bold text-xs font-mono shadow-glow-neon transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
-            {isExporting ? '생성 중...' : exportSuccess ? '저장 완료!' : '스카우팅 카드 저장 (PNG)'}
+            <span>{isExporting ? '생성 중...' : exportSuccess ? '저장 완료!' : '리포트 카드 저장 (PNG)'}</span>
           </button>
         </div>
       </div>
@@ -170,84 +170,89 @@ export default function ScoutReportCard({
       <div
         ref={cardRef}
         id="scout-report-card"
-        className="tactical-box rounded-xl p-5 bg-[#121226] border border-[#1f2240] shadow-2xl relative overflow-hidden"
+        className="tactical-box rounded-xl p-3.5 sm:p-5 bg-[#121226] border border-[#1f2240] shadow-2xl relative overflow-hidden"
       >
         {/* Card Header */}
-        <div className="flex items-center justify-between border-b border-[#1f2240] pb-3 mb-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#00ff88] animate-ping opacity-75" />
+        <div className="flex items-center justify-between border-b border-[#1f2240] pb-2.5 mb-3.5">
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#00ff88] animate-ping opacity-75 shrink-0" />
             <h3 className="text-xs tracking-wider uppercase font-mono font-bold text-gray-300">
-              [ VERIFIED TACTICAL SCOUT REPORT ]
+              [ AI 전술 스카우팅 정밀 분석 리포트 ]
             </h3>
           </div>
-          <div className="text-[11px] font-mono text-gray-500">
+          <div className="text-[10px] font-mono text-gray-500 hidden sm:block">
             ENGINE: Wyscout Event Model v2.4 (CC BY 4.0)
           </div>
         </div>
 
         {/* Main Grid: Left Profile + Right Dual Radar */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 items-center">
           {/* Left Column: Player Silhouette & Core Metadata */}
-          <div className="md:col-span-6 flex flex-col gap-4">
-            <div className="flex gap-4 items-start">
-              {/* Privacy Silhouette Avatar (Portrait rights compliance) */}
-              <div className="w-20 h-24 rounded-lg bg-[#181832] border border-[#2a2e5c] flex flex-col items-center justify-center p-2 relative shrink-0 shadow-inner">
-                <svg className="w-12 h-14 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+          <div className="md:col-span-6 flex flex-col gap-3 sm:gap-4">
+            <div className="flex gap-3 sm:gap-4 items-start">
+              {/* Privacy Silhouette Avatar */}
+              <div className="w-16 h-20 sm:w-20 sm:h-24 rounded-lg bg-[#181832] border border-[#2a2e5c] flex flex-col items-center justify-center p-2 relative shrink-0 shadow-inner">
+                <svg className="w-10 h-12 sm:w-12 sm:h-14 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
-                <span className="absolute bottom-1 right-1 text-sm drop-shadow">{flag}</span>
+                <span className="absolute bottom-1 right-1 text-xs sm:text-sm drop-shadow">{flag}</span>
               </div>
 
               {/* Player Identity */}
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-white tracking-tight">
-                    {player.name} {player.korean_name && <span className="text-sm font-normal text-gray-400">({player.korean_name})</span>}
+              <div className="flex flex-col min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight break-keep">
+                    {player.name}
                   </h2>
-                  <span className="px-2 py-0.5 text-xs font-mono font-bold rounded bg-[#00e5ff]/15 text-[#00e5ff] border border-[#00e5ff]/30">
+                  {player.korean_name && (
+                    <span className="text-xs sm:text-sm font-medium text-[#00ff88] break-keep">
+                      ({player.korean_name})
+                    </span>
+                  )}
+                  <span className="px-1.5 py-0.2 text-[10px] sm:text-xs font-mono font-bold rounded bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/30 shrink-0">
                     {player.primary_pos}
                   </span>
                 </div>
-                <div className="text-xs text-gray-400 font-mono mt-0.5">{player.full_name}</div>
-                <div className="text-xs text-gray-300 font-medium mt-1 flex items-center gap-1.5">
-                  <span className="text-gray-400">{player.club}</span>
+                <div className="text-[11px] text-gray-400 font-mono mt-0.5 truncate">{player.full_name}</div>
+                <div className="text-xs text-gray-300 font-medium mt-1 flex items-center gap-1.5 flex-wrap break-keep">
+                  <span className="text-gray-300">{player.club}</span>
                   <span className="text-gray-600">•</span>
                   <span className="text-gray-400">{player.league}</span>
                 </div>
-                <div className="text-[11px] font-mono text-[#00ff88] mt-1">
+                <div className="text-[11px] font-mono text-[#00ff88] mt-1 break-keep">
                   ROLE: {player.tactical_role}
                 </div>
               </div>
             </div>
 
-            {/* Quick Metrics Tag Grid */}
-            <div className="grid grid-cols-4 gap-2 bg-[#0d0d1e] p-2.5 rounded-lg border border-[#1f2240] text-center font-mono">
-              <div>
-                <div className="text-[10px] text-gray-400">AGE</div>
-                <div className="text-xs font-bold text-white">{player.age}세</div>
+            {/* Quick Metrics 4-Box Grid (2x2 on Mobile, 4x1 on Desktop) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-[#0d0d1e] p-2.5 rounded-lg border border-[#1f2240] text-center font-mono">
+              <div className="p-1">
+                <div className="text-[10px] text-gray-400 font-sans">나이 (AGE)</div>
+                <div className="text-xs sm:text-sm font-bold text-white mt-0.5">{player.age}세</div>
               </div>
-              <div>
-                <div className="text-[10px] text-gray-400">FOOT / HT</div>
-                <div className="text-xs font-bold text-white">{player.foot} / {player.height_cm}cm</div>
+              <div className="p-1">
+                <div className="text-[10px] text-gray-400 font-sans">주발 / 신장</div>
+                <div className="text-xs sm:text-sm font-bold text-white mt-0.5">{player.foot} / {player.height_cm}cm</div>
               </div>
-              <div>
-                <div className="text-[10px] text-gray-400">MKT VALUE</div>
-                <div className="text-xs font-bold text-[#00ff88]">€{player.market_value_eur}M</div>
+              <div className="p-1">
+                <div className="text-[10px] text-gray-400 font-sans">시장 가치</div>
+                <div className="text-xs sm:text-sm font-bold text-[#00ff88] mt-0.5">€{player.market_value_eur}M</div>
               </div>
-              <div>
-                <div className="text-[10px] text-gray-400">WAGE</div>
-                <div className="text-xs font-bold text-gray-300">€{player.wage_eur_pw}k/w</div>
+              <div className="p-1">
+                <div className="text-[10px] text-gray-400 font-sans">추정 주급</div>
+                <div className="text-xs sm:text-sm font-bold text-gray-300 mt-0.5">€{player.wage_eur_pw}k/w</div>
               </div>
             </div>
 
             {/* Tactical Match Highlight Banner */}
-            <div className="p-3 rounded-lg bg-gradient-to-r from-[#00ff88]/15 via-[#00e5ff]/10 to-transparent border border-[#00ff88]/30 flex items-center justify-between">
+            <div className="p-3 rounded-lg bg-gradient-to-r from-[#00ff88]/15 via-[#00e5ff]/10 to-transparent border border-[#00ff88]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <div className="text-[10px] uppercase font-mono tracking-wider text-gray-300">
-                  TACTICAL MATCH SCORE <span className="text-[9px] text-[#00ff88]">({candidate?.metric_type || algorithm})</span>
+                  전술 일치도 (TACTICAL MATCH)
                 </div>
-                <div className="text-xs font-medium text-gray-400 mt-0.5 flex items-center gap-2">
-                  <span>vs <span className="text-white font-semibold">{targetPlayer.name}</span></span>
+                <div className="text-xs text-gray-300 mt-0.5 flex items-center gap-1.5 flex-wrap break-keep">
+                  <span>vs <strong className="text-white">{targetPlayer.korean_name || targetPlayer.name}</strong></span>
                   {candidate?.cosine_pct !== undefined && candidate?.cosine_pct !== null && (
                     <span className="text-[10px] font-mono text-gray-300 bg-[#0a0a16] px-1.5 py-0.5 rounded border border-[#1f2240]">
                       스타일: <strong className="text-[#00ff88]">{safeFormat(candidate.cosine_pct)}%</strong> | 체급: <strong className="text-[#00e5ff]">{safeFormat(candidate.euclidean_pct)}%</strong>
@@ -255,7 +260,7 @@ export default function ScoutReportCard({
                   )}
                 </div>
               </div>
-              <div className="text-right">
+              <div className="sm:text-right">
                 <div className="text-2xl font-mono font-extrabold text-[#00ff88] tracking-tight drop-shadow-[0_0_10px_rgba(0,255,136,0.4)]">
                   {safeFormat(similarityPct)}%
                 </div>
@@ -264,7 +269,7 @@ export default function ScoutReportCard({
 
             {/* 5 Tactical Pillar Badges */}
             <div className="flex flex-wrap gap-1.5 items-center">
-              <div className="text-[10px] font-mono text-gray-400 mr-1">TIER RATINGS:</div>
+              <div className="text-[10px] font-mono text-gray-400 mr-1 shrink-0 font-bold">능력치:</div>
               <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${getGradeBadgeClass(player.vision_grade)}`}>
                 창의성 {player.vision_grade} ({player.vision_score})
               </span>
@@ -284,108 +289,108 @@ export default function ScoutReportCard({
           </div>
 
           {/* Right Column: Interactive Overlay Radar Chart */}
-          <div className="md:col-span-6 flex flex-col items-center justify-center p-2 rounded-xl bg-[#0e0e22]/70 border border-[#1f2240]/80">
+          <div className="md:col-span-6 flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl bg-[#0e0e22]/80 border border-[#1f2240]">
             <div className="text-[11px] font-mono text-gray-400 mb-1 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#00ff88]"></span>
-              RADAR STYLE OVERLAY (Target vs Scouted)
+              전술 레이더 대조 (Target vs Scouted)
             </div>
             <RadarChartCanvas
               targetScores={targetScores}
               candidateScores={candScores}
-              targetName={targetPlayer.name}
-              candidateName={player.name}
-              size={290}
+              targetName={targetPlayer.korean_name || targetPlayer.name}
+              candidateName={player.korean_name || player.name}
+              size={260}
             />
           </div>
         </div>
 
         {/* Detailed Per-90 Factual Stats Comparison Table */}
-        <div className="mt-5 pt-4 border-t border-[#1f2240]">
-          <div className="text-xs font-mono font-semibold text-gray-300 mb-2 flex items-center justify-between">
+        <div className="mt-4 pt-3.5 border-t border-[#1f2240]">
+          <div className="text-xs font-mono font-semibold text-gray-300 mb-2.5 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
               <Crosshair className="w-3.5 h-3.5 text-[#00ff88]" />
-              [ KEY STATS COMPARISON (Per 90 Minutes) ]
+              [ 90분당 핵심 전술 스탯 직접 대조 ]
             </span>
-            <span className="text-[10px] text-gray-400">Green = Advantage vs Target</span>
+            <span className="text-[10px] text-gray-400 hidden sm:inline">9대 영역 Wyscout 데이터 기반</span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {/* Stat 1: Key Passes */}
-            <div className="bg-[#0e0e22] p-2 rounded border border-[#1f2240] font-mono text-xs">
-              <div className="text-[10px] text-[#00e5ff] font-sans font-medium">기회 창출 (Key Passes)</div>
-              <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-white font-bold">{player.key_passes}</span>
-                <span className="text-[11px] text-gray-400">기준: {targetPlayer.key_passes}</span>
+            <div className="bg-[#0e0e22] p-2 sm:p-2.5 rounded-lg border border-[#1f2240] font-mono text-xs">
+              <div className="text-[10px] text-[#00e5ff] font-sans font-semibold">기회 창출 (Key Passes)</div>
+              <div className="flex items-baseline justify-between mt-1">
+                <span className="text-white font-bold text-xs sm:text-sm">{player.key_passes}</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-400">기준 {targetPlayer.key_passes}</span>
               </div>
             </div>
 
             {/* Stat 2: Progressive Passes */}
-            <div className="bg-[#0e0e22] p-2 rounded border border-[#1f2240] font-mono text-xs">
-              <div className="text-[10px] text-[#00e5ff] font-sans font-medium">전진 패스 (Prog Passes)</div>
-              <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-white font-bold">{player.progressive_passes}</span>
-                <span className="text-[11px] text-gray-400">기준: {targetPlayer.progressive_passes}</span>
+            <div className="bg-[#0e0e22] p-2 sm:p-2.5 rounded-lg border border-[#1f2240] font-mono text-xs">
+              <div className="text-[10px] text-[#00e5ff] font-sans font-semibold">전진 패스 (Prog Passes)</div>
+              <div className="flex items-baseline justify-between mt-1">
+                <span className="text-white font-bold text-xs sm:text-sm">{player.progressive_passes}</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-400">기준 {targetPlayer.progressive_passes}</span>
               </div>
             </div>
 
             {/* Stat 3: Pass Completion % */}
-            <div className="bg-[#0e0e22] p-2 rounded border border-[#1f2240] font-mono text-xs">
-              <div className="text-[10px] text-[#00e5ff] font-sans font-medium">패스 성공률 (Pass Acc)</div>
-              <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-white font-bold">{player.pass_completion_pct}%</span>
-                <span className="text-[11px] text-gray-400">기준: {targetPlayer.pass_completion_pct}%</span>
+            <div className="bg-[#0e0e22] p-2 sm:p-2.5 rounded-lg border border-[#1f2240] font-mono text-xs">
+              <div className="text-[10px] text-[#00e5ff] font-sans font-semibold">패스 성공률 (Pass Acc)</div>
+              <div className="flex items-baseline justify-between mt-1">
+                <span className="text-white font-bold text-xs sm:text-sm">{player.pass_completion_pct}%</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-400">기준 {targetPlayer.pass_completion_pct}%</span>
               </div>
             </div>
 
             {/* Stat 4: Dribbles Completed */}
-            <div className="bg-[#0e0e22] p-2 rounded border border-[#1f2240] font-mono text-xs">
-              <div className="text-[10px] text-amber-400 font-sans font-medium">드리블 성공 (Dribbles)</div>
-              <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-white font-bold">{player.dribbles_completed}</span>
-                <span className="text-[11px] text-gray-400">기준: {targetPlayer.dribbles_completed}</span>
+            <div className="bg-[#0e0e22] p-2 sm:p-2.5 rounded-lg border border-[#1f2240] font-mono text-xs">
+              <div className="text-[10px] text-amber-400 font-sans font-semibold">드리블 성공 (Dribbles)</div>
+              <div className="flex items-baseline justify-between mt-1">
+                <span className="text-white font-bold text-xs sm:text-sm">{player.dribbles_completed}</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-400">기준 {targetPlayer.dribbles_completed}</span>
               </div>
             </div>
 
             {/* Stat 5: Shots & xG */}
-            <div className="bg-[#0e0e22] p-2 rounded border border-[#1f2240] font-mono text-xs">
-              <div className="text-[10px] text-rose-400 font-sans font-medium">슈팅 & xG (Shots)</div>
-              <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-white font-bold">{player.shots} ({player.xg})</span>
-                <span className="text-[11px] text-gray-400">기준: {targetPlayer.shots} ({targetPlayer.xg})</span>
+            <div className="bg-[#0e0e22] p-2 sm:p-2.5 rounded-lg border border-[#1f2240] font-mono text-xs">
+              <div className="text-[10px] text-rose-400 font-sans font-semibold">슈팅 & xG (Shots)</div>
+              <div className="flex items-baseline justify-between mt-1">
+                <span className="text-white font-bold text-xs sm:text-sm">{player.shots} <span className="text-[10px] text-rose-300">({player.xg})</span></span>
+                <span className="text-[10px] sm:text-[11px] text-gray-400">기준 {targetPlayer.shots}</span>
               </div>
             </div>
 
             {/* Stat 6: Tackles & Interceptions */}
-            <div className="bg-[#0e0e22] p-2 rounded border border-[#1f2240] font-mono text-xs">
-              <div className="text-[10px] text-indigo-400 font-sans font-medium">태클 & 가로채기 (Tkl+Int)</div>
-              <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-white font-bold">{safeFormat(safeNum(player.tackles_won) + safeNum(player.interceptions))}</span>
-                <span className="text-[11px] text-gray-400">기준: {safeFormat(safeNum(targetPlayer.tackles_won) + safeNum(targetPlayer.interceptions))}</span>
+            <div className="bg-[#0e0e22] p-2 sm:p-2.5 rounded-lg border border-[#1f2240] font-mono text-xs">
+              <div className="text-[10px] text-indigo-400 font-sans font-semibold">태클+가로채기 (Tkl+Int)</div>
+              <div className="flex items-baseline justify-between mt-1">
+                <span className="text-white font-bold text-xs sm:text-sm">{safeFormat(safeNum(player.tackles_won) + safeNum(player.interceptions))}</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-400">기준 {safeFormat(safeNum(targetPlayer.tackles_won) + safeNum(targetPlayer.interceptions))}</span>
               </div>
             </div>
 
             {/* Stat 7: Ground Duels */}
-            <div className="bg-[#0e0e22] p-2 rounded border border-[#1f2240] font-mono text-xs">
-              <div className="text-[10px] text-emerald-400 font-sans font-medium">지상 경합 승리 (Duels)</div>
-              <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-white font-bold">{player.ground_duels_won}</span>
-                <span className="text-[11px] text-gray-400">기준: {targetPlayer.ground_duels_won}</span>
+            <div className="bg-[#0e0e22] p-2 sm:p-2.5 rounded-lg border border-[#1f2240] font-mono text-xs">
+              <div className="text-[10px] text-emerald-400 font-sans font-semibold">지상 경합 승리 (Duels)</div>
+              <div className="flex items-baseline justify-between mt-1">
+                <span className="text-white font-bold text-xs sm:text-sm">{player.ground_duels_won}</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-400">기준 {targetPlayer.ground_duels_won}</span>
               </div>
             </div>
 
             {/* Stat 8: Aerial Won % */}
-            <div className="bg-[#0e0e22] p-2 rounded border border-[#1f2240] font-mono text-xs">
-              <div className="text-[10px] text-emerald-400 font-sans font-medium">공중볼 승률 (Aerial %)</div>
-              <div className="flex items-baseline justify-between mt-0.5">
-                <span className="text-white font-bold">{player.aerial_won_pct}%</span>
-                <span className="text-[11px] text-gray-400">기준: {targetPlayer.aerial_won_pct}%</span>
+            <div className="bg-[#0e0e22] p-2 sm:p-2.5 rounded-lg border border-[#1f2240] font-mono text-xs">
+              <div className="text-[10px] text-emerald-400 font-sans font-semibold">공중볼 승률 (Aerial %)</div>
+              <div className="flex items-baseline justify-between mt-1">
+                <span className="text-white font-bold text-xs sm:text-sm">{player.aerial_won_pct}%</span>
+                <span className="text-[10px] sm:text-[11px] text-gray-400">기준 {targetPlayer.aerial_won_pct}%</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Card Footer: Generated by FM Scout AI */}
-        <div className="mt-4 pt-3 border-t border-[#1f2240] flex items-center justify-between text-[10px] font-mono text-gray-400">
+        <div className="mt-3.5 pt-2.5 border-t border-[#1f2240] flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10px] font-mono text-gray-400">
           <div>Generated by <span className="text-[#00ff88] font-bold">FM Scout AI (FC Finder)</span></div>
           <div>CC BY 4.0 Wyscout Nature Sci Data / StatsBomb Open Data Model</div>
         </div>
