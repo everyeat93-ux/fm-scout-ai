@@ -312,6 +312,38 @@ def get_legal_info():
         "disclaimer": "FM Scout AI (FC Finder)는 비영리 전술 데이터 분석 시뮬레이터입니다. 본 서비스는 선수의 실제 사진(초상권 보호) 대신 국기 아이콘 및 실루엣 아바타를 사용하며, 지적재산권과 오픈 라이선스 규정을 엄격히 준수합니다."
     }
 
+@app.post("/api/admin/sync-live-data")
+def sync_live_data(max_players: int = 150):
+    """Triggers live football data synchronization from FotMob / Wyscout."""
+    try:
+        from pipeline.sync_live_football_data import run_live_synchronization
+        result = run_live_synchronization(max_live_fetches=max_players)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Live sync error: {str(e)}")
+
+@app.get("/api/admin/sync-status")
+def get_sync_status():
+    """Returns the latest live data synchronization timestamp and status."""
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='sync_metadata'")
+    if not c.fetchone():
+        conn.close()
+        return {"status": "none", "message": "No sync has been performed yet."}
+    
+    c.execute("SELECT sync_timestamp, players_updated, live_stats_fetched, status FROM sync_metadata ORDER BY id DESC LIMIT 1")
+    row = c.fetchone()
+    conn.close()
+    if row:
+        return {
+            "status": row["status"],
+            "last_synced": row["sync_timestamp"],
+            "players_updated": row["players_updated"],
+            "live_stats_fetched": row["live_stats_fetched"]
+        }
+    return {"status": "none", "message": "No sync records found."}
+
 # Mount static frontend build if it exists
 frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "dist"))
 if os.path.exists(frontend_dist):
