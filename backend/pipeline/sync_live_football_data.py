@@ -86,30 +86,30 @@ TOP_STAR_FOTMOB_MAP = {
 }
 
 METRIC_RANGES = {
-    "kp": (0.3, 3.8),
-    "prog_p": (1.5, 11.0),
-    "through_balls": (0.05, 1.2),
-    "pass_acc": (65.0, 93.0),
-    "crosses_box": (0.1, 2.5),
-    "xg": (0.02, 0.95),
-    "goals": (0.0, 0.90),
-    "shots": (0.3, 4.8),
+    "kp": (0.2, 3.5),
+    "prog_p": (1.0, 9.5),
+    "through_balls": (0.05, 1.0),
+    "pass_acc": (60.0, 94.0),
+    "crosses_box": (0.1, 2.2),
+    "xg": (0.02, 0.85),
+    "goals": (0.0, 0.85),
+    "shots": (0.3, 4.5),
     "sot_pct": (20.0, 60.0),
-    "box_shots": (0.1, 3.5),
-    "dribbles": (0.3, 4.5),
-    "prog_carries": (1.0, 9.5),
-    "carry_dist": (20.0, 160.0),
+    "box_shots": (0.1, 3.2),
+    "dribbles": (0.3, 4.2),
+    "prog_carries": (1.0, 8.5),
+    "carry_dist": (30.0, 240.0),
     "dribble_pct": (35.0, 75.0),
     "fouls_drawn": (0.3, 3.5),
-    "tackles_won": (0.4, 3.8),
-    "interceptions": (0.3, 2.8),
-    "recoveries": (2.5, 11.0),
-    "blocks": (0.2, 2.2),
-    "clearances": (0.3, 6.0),
-    "ground_duels": (40.0, 70.0),
-    "aerial_duels": (0.4, 6.5),
-    "aerial_pct": (30.0, 75.0),
-    "pressures": (6.0, 26.0)
+    "tackles_won": (0.2, 3.5),
+    "interceptions": (0.2, 2.5),
+    "recoveries": (1.5, 9.5),
+    "blocks": (0.1, 1.8),
+    "clearances": (0.2, 5.5),
+    "ground_duels": (1.5, 8.5),
+    "aerial_duels": (0.2, 4.5),
+    "aerial_pct": (20.0, 75.0),
+    "pressures": (2.0, 20.0)
 }
 
 def norm(val: float, metric: str) -> float:
@@ -194,20 +194,22 @@ def extract_live_stats(data: Dict[str, Any], default_stats: Optional[Dict[str, f
     shots = float(raw_dict.get('Shots') or 0.0)
     sot = float(raw_dict.get('Shots on target') or 0.0)
     sot_pct = (sot / shots * 100.0) if shots > 0 else 38.0
-    box_shots = float(raw_dict.get('Touches in opposition box') or shots * 0.6) * 0.4
+    box_shots = float(raw_dict.get('Touches in opposition box') or shots * 0.8) * 0.5
     
     kp = float(raw_dict.get('Chances created') or 0.0)
-    prog_p = float(raw_dict.get('Line-breaking passes') or 0.0)
     pass_acc = float(raw_dict.get('Pass accuracy') or 80.0)
     passes_att = float(raw_dict.get('Accurate passes') or 30.0) / max(0.1, (pass_acc / 100.0))
-    through_balls = float(raw_dict.get('Big chances created') or 0.0) * 0.7
+    long_balls = float(raw_dict.get('Accurate long balls') or 1.0)
+    prog_p = float(raw_dict.get('Line-breaking passes') or (long_balls * 1.8 + passes_att * 0.08))
+    through_balls = float(raw_dict.get('Big chances created') or (kp * 0.25))
     crosses_box = float(raw_dict.get('Successful crosses') or 0.0)
     
     dribbles = float(raw_dict.get('Dribbles') or 0.0)
-    dribble_pct = float(raw_dict.get('Dribbles success rate') or 50.0)
-    carry_dist = float(raw_dict.get('Running') or 150.0) * 0.1
+    dribble_pct = float(raw_dict.get('Dribbles success rate') or 52.0)
+    touches = float(raw_dict.get('Touches') or 45.0)
+    carry_dist = max(50.0, touches * 3.6)
     fouls_drawn = float(raw_dict.get('Fouls won') or 1.2)
-    prog_carries = max(1.0, dribbles * 2.2)
+    prog_carries = max(1.2, dribbles * 2.2)
     
     tackles_won = float(raw_dict.get('Tackles') or 0.8)
     interceptions = float(raw_dict.get('Interceptions') or 0.6)
@@ -218,7 +220,8 @@ def extract_live_stats(data: Dict[str, Any], default_stats: Optional[Dict[str, f
     ground_duels = float(raw_dict.get('Duels won') or 4.0)
     aerial_duels = float(raw_dict.get('Aerials won') or 0.8)
     aerial_pct = float(raw_dict.get('Aerials won %') or 45.0)
-    pressures = float(raw_dict.get('Defensive actions') or 10.0) * 1.5
+    def_actions = float(raw_dict.get('Defensive actions') or 1.0)
+    pressures = max(5.0, def_actions * 3.5 + (recoveries * 1.2))
     
     if shots == 0 and kp == 0 and pass_acc == 80.0 and default_stats:
         return default_stats
@@ -290,19 +293,19 @@ def calculate_ratings_from_stats(st: Dict[str, float], pos: str, market_value: f
     )
 
     # Base scale
-    vision_score = round(42.0 + vision_raw * 55.0, 1)
-    striking_score = round(42.0 + striking_raw * 55.0, 1)
-    dribble_score = round(42.0 + dribble_raw * 55.0, 1)
-    defense_score = round(42.0 + defense_raw * 55.0, 1)
-    physical_score = round(42.0 + physical_raw * 55.0, 1)
+    vision_score = round(45.0 + vision_raw * 50.0, 1)
+    striking_score = round(45.0 + striking_raw * 50.0, 1)
+    dribble_score = round(45.0 + dribble_raw * 50.0, 1)
+    defense_score = round(45.0 + defense_raw * 50.0, 1)
+    physical_score = round(45.0 + physical_raw * 50.0, 1)
 
     # Position-specific overall calculation
     if pos in ["ST", "CF"]:
-        overall_score = round(striking_score * 0.55 + dribble_score * 0.25 + vision_score * 0.20, 1)
+        overall_score = round(striking_score * 0.60 + dribble_score * 0.25 + physical_score * 0.15, 1)
     elif pos in ["W", "LW", "RW"]:
-        overall_score = round(dribble_score * 0.40 + striking_score * 0.35 + vision_score * 0.25, 1)
+        overall_score = round(dribble_score * 0.45 + striking_score * 0.30 + vision_score * 0.25, 1)
     elif pos == "AM":
-        overall_score = round(vision_score * 0.50 + dribble_score * 0.30 + striking_score * 0.20, 1)
+        overall_score = round(vision_score * 0.55 + dribble_score * 0.30 + striking_score * 0.15, 1)
     elif pos == "CM":
         overall_score = round(vision_score * 0.35 + defense_score * 0.30 + dribble_score * 0.20 + physical_score * 0.15, 1)
     elif pos == "DM":

@@ -34,8 +34,8 @@ def get_mega_player_dataset():
         })
 
     # 1. KOREAN & ASIAN STARS
-    add_p("p_son", "H. M. Son", "Son Heung-min", "손흥민", 33, "South Korea", "KR", "Tottenham Hotspur (LAFC)", "Premier League", 1, "ST", "LW", "FW", "Both", 183, 45.0, 230.0, 2026,
-          "양발 피니셔 & 인디펜던트 스코어러 (Two-Footed Finisher)",
+    add_p("p_son", "H. M. Son", "Son Heung-min", "손흥민", 33, "South Korea", "KR", "Los Angeles FC", "MLS", 1, "ST", "LW", "FW", "Both", 183, 22.0, 180.0, 2026,
+          "양발 피니셔 & LAFC 슈퍼스타 (Two-Footed Finisher)",
           {"kp": 2.4, "prog_p": 4.1, "pass_acc": 82.5, "passes_att": 35.0, "through_balls": 0.55, "crosses_box": 1.2, "shots": 2.8, "box_shots": 2.2, "sot_pct": 48.5, "xg": 0.52, "npxg": 0.44, "goals": 0.55, "dribbles": 2.2, "dribble_pct": 54.0, "carry_dist": 250.0, "fouls_drawn": 1.6, "prog_carries": 4.6, "interceptions": 0.5, "tackles_won": 0.9, "clearances": 0.4, "blocks": 0.5, "recoveries": 3.8, "aerial_pct": 36.0, "ground_duels": 4.8, "aerial_duels": 0.6, "pressures": 14.5})
 
     add_p("p_lee_kangin", "K. I. Lee", "Lee Kang-in", "이강인", 24, "South Korea", "KR", "Atlético Madrid (PSG)", "La Liga", 1, "AM", "RW", "MF", "Left", 173, 35.0, 95.0, 2028,

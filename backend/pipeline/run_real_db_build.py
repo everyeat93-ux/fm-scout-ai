@@ -95,7 +95,6 @@ EPL_SQUADS = [
     ]),
 
     ("Tottenham Hotspur", "Premier League", 1, "England", "GB-ENG", 92, [
-        ("H. M. Son", "Son Heung-min", "손흥민", 33, "South Korea", "KR", "ST", "LW", "FW", "Both", 183, 45.0, 230.0, "양발 피니셔 & 인디펜던트 스코어러", "st_worldclass"),
         ("M. Mudryk", "Mykhailo Mudryk", "미하일로 무드리크", 23, "Ukraine", "UA", "W", "LW", "FW", "Right", 175, 35.0, 100.0, "초음속 스프린터 & 측면 돌파", "winger_solid"),
         ("Sávio", "Sávio Moreira", "사비뉴", 20, "Brazil", "BR", "W", "RW", "FW", "Left", 176, 87.7, 30.0, "화려한 개인기 & 측면 크랙", "winger_wonderkid"),
         ("S. Tonali", "Sandro Tonali", "산드로 토날리", 24, "Italy", "IT", "CM", "DM", "MF", "Right", 181, 108.0, 120.0, "이탈리아 전술 레지스타 & 패서", "cm_worldclass"),
@@ -433,6 +432,12 @@ WORLD_STARS_SQUADS = [
         ("L. Suárez", "Luis Suárez", "루이스 수아레스", 37, "Uruguay", "UY", "ST", "CF", "FW", "Right", 182, 4.0, 150.0, "전설적인 킬러 & 박스 피니셔", "st_elite"),
         ("S. Busquets", "Sergio Busquets", "세르히오 부스케츠", 36, "Spain", "ES", "DM", "CM", "MF", "Right", 189, 2.5, 150.0, "역대 최고의 수비형 미드필더 & 탈압박", "dm_elite"),
         ("J. Alba", "Jordi Alba", "조르디 알바", 35, "Spain", "ES", "LB", "LWB", "DF", "Left", 170, 2.5, 120.0, "스피디 오버래퍼 & 메시와의 영혼의 콤비", "fb_elite")
+    ]),
+
+    ("Los Angeles FC", "MLS", 1, "United States", "US", 85, [
+        ("H. M. Son", "Son Heung-min", "손흥민", 33, "South Korea", "KR", "ST", "LW", "FW", "Both", 183, 22.0, 180.0, "양발 피니셔 & LAFC 슈퍼스타", "st_worldclass"),
+        ("O. Giroud", "Olivier Giroud", "올리비에 지루", 38, "France", "FR", "ST", "CF", "FW", "Left", 193, 3.0, 70.0, "프랑스 역대 최다 득점 타겟터", "st_elite"),
+        ("D. Bouanga", "Denis Bouanga", "데니스 부앙가", 30, "Gabon", "GA", "W", "LW", "FW", "Right", 180, 8.0, 60.0, "MLS 최고 크랙 득점 기계", "winger_elite")
     ]),
 
     ("Al Nassr", "Saudi Pro League", 1, "Saudi Arabia", "SA", 87, [

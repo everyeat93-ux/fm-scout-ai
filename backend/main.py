@@ -66,13 +66,22 @@ def on_startup():
         total_count = c.fetchone()[0]
         c.execute("SELECT club FROM players WHERE id = 'p_lee_kangin'")
         row = c.fetchone()
+        c.execute("SELECT club FROM players WHERE id = 'p_son'")
+        son_row = c.fetchone()
         
-        # If database has fake synthetic players or is missing latest FotMob transfers, rebuild!
-        if fake_count > 0 or total_count < 100 or not row or "Atl" not in str(row[0]):
+        # If database has fake synthetic players or is missing latest transfers, rebuild!
+        if fake_count > 0 or total_count < 100 or not row or "Atl" not in str(row[0]) or not son_row or "Los Angeles" not in str(son_row[0]):
             print("Synchronizing 100% authentic real player database with latest FotMob transfers...")
             build_100pct_real_database()
             get_all_player_feature_vectors(reload=True)
             print("100% Real Player Database successfully loaded!")
+        
+        # Extra safety check for Son Heung-min LAFC assignment & duplicate cleanup
+        c.execute("UPDATE players SET club = 'Los Angeles FC', league = 'MLS', market_value_eur = 22.0 WHERE id = 'p_son'")
+        c.execute("DELETE FROM players WHERE id = 'p_heung_min_son'")
+        c.execute("DELETE FROM tactical_ratings WHERE player_id = 'p_heung_min_son'")
+        c.execute("DELETE FROM player_stats WHERE player_id = 'p_heung_min_son'")
+        conn.commit()
         conn.close()
     except Exception as e:
         print(f"Startup DB check error: {e}")
