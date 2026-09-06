@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   Activity, Search, Compass, Shield, Sparkles, Layers, Sliders, 
-  Download, HelpCircle, ArrowRight, CheckCircle2, User, Trophy, Eye, BookOpen, RefreshCw, Target, Star
+  Download, HelpCircle, ArrowRight, CheckCircle2, User, Trophy, Eye, BookOpen, RefreshCw, Target, Star, Lock, Unlock, Key
 } from 'lucide-react';
 import TargetSelector from './components/TargetSelector';
 import FilterControls from './components/FilterControls';
@@ -139,6 +139,50 @@ export default function App() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncNotification, setSyncNotification] = useState(null);
 
+  // Admin Access Control
+  const [adminKey, setAdminKey] = useState(() => localStorage.getItem('fm_admin_key') || '');
+  const [isAdmin, setIsAdmin] = useState(() => !!localStorage.getItem('fm_admin_key'));
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState('');
+
+  // Check URL query parameters on mount (?admin=KEY or ?key=KEY)
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const keyFromUrl = params.get('admin') || params.get('key');
+      if (keyFromUrl) {
+        setAdminKey(keyFromUrl);
+        setIsAdmin(true);
+        localStorage.setItem('fm_admin_key', keyFromUrl);
+      }
+    } catch (e) {}
+  }, []);
+
+  const handleAdminLogin = (e) => {
+    e?.preventDefault();
+    const cleanKey = adminPasswordInput.trim();
+    if (cleanKey) {
+      setAdminKey(cleanKey);
+      setIsAdmin(true);
+      localStorage.setItem('fm_admin_key', cleanKey);
+      setIsAdminModalOpen(false);
+      setSyncNotification({
+        type: 'success',
+        message: '🔒 관리자 권한이 활성화되었습니다. 실시간 동기화 버튼이 잠금 해제되었습니다.'
+      });
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setAdminKey('');
+    setIsAdmin(false);
+    localStorage.removeItem('fm_admin_key');
+    setSyncNotification({
+      type: 'info',
+      message: '🔒 관리자 권한이 비활성화되었습니다.'
+    });
+  };
+
   // Initial Fetch: Players & Archetypes
   const fetchInitialData = useCallback(async () => {
     try {
@@ -159,15 +203,21 @@ export default function App() {
     fetchInitialData();
   }, [fetchInitialData]);
 
-  // Handle Live Data Sync
+  // Handle Live Data Sync (Admin Only)
   const handleLiveSync = async () => {
     if (isSyncing) return;
     setIsSyncing(true);
     setSyncNotification({ type: 'info', message: '⚽ 실시간 경기 스탯 및 Wyscout 레이더 지표 동기화 중...' });
     try {
-      const res = await fetch('/api/admin/sync-live-data', { method: 'POST' });
+      const res = await fetch('/api/admin/sync-live-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Key': adminKey || 'scout2026'
+        }
+      });
       const data = await res.json();
-      if (data.status === 'success') {
+      if (res.ok && data.status === 'success') {
         setSyncNotification({
           type: 'success',
           message: `✅ 실시간 데이터 동기화 완료! ${data.live_stats_fetched}명 선수의 최신 경기 스탯이 갱신되었습니다.`
@@ -175,7 +225,7 @@ export default function App() {
         await fetchInitialData();
         runScouting();
       } else {
-        setSyncNotification({ type: 'error', message: `❌ 동기화 실패: ${data.detail || '오류 발생'}` });
+        setSyncNotification({ type: 'error', message: `❌ 동기화 실패: ${data.detail || '관리자 권한 오류'}` });
       }
     } catch (err) {
       setSyncNotification({ type: 'error', message: `❌ 동기화 요청 실패: ${err.message}` });
@@ -287,9 +337,18 @@ export default function App() {
                 <span className="font-mono font-extrabold text-sm sm:text-base tracking-tight text-white whitespace-nowrap">
                   FM SCOUT <span className="text-[#00ff88]">AI</span>
                 </span>
-                <span className="px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-mono font-bold bg-[#181832] text-[#00e5ff] border border-[#2a2e5c] shrink-0">
-                  v2.4
-                </span>
+                <button
+                  onClick={() => setIsAdminModalOpen(true)}
+                  title={isAdmin ? "관리자 모드 활성화됨 (클릭하여 설정)" : "관리자 인증 (클릭)"}
+                  className={`px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-mono font-bold border shrink-0 transition-all cursor-pointer flex items-center gap-1 ${
+                    isAdmin 
+                      ? 'bg-purple-950/80 text-purple-300 border-purple-500/50 shadow-glow-neon' 
+                      : 'bg-[#181832] text-[#00e5ff] border-[#2a2e5c] hover:border-[#00e5ff]'
+                  }`}
+                >
+                  {isAdmin && <Lock className="w-2.5 h-2.5 text-purple-400" />}
+                  <span>v2.4 {isAdmin ? '(ADMIN)' : ''}</span>
+                </button>
               </div>
               <p className="text-[10px] font-mono text-gray-400 hidden sm:block truncate">
                 Wyscout / Metrica Nexus Tactical Engine • 100% Real Football Database
@@ -299,19 +358,31 @@ export default function App() {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-            <button
-              onClick={handleLiveSync}
-              disabled={isSyncing}
-              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-medium border transition-all shadow-glow-neon whitespace-nowrap cursor-pointer ${
-                isSyncing
-                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/50 animate-pulse'
-                  : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-              }`}
-              title="FotMob / Wyscout 실시간 경기 스탯 & 5각 레이더 지표 자동 갱신"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-purple-400' : 'text-emerald-400'}`} />
-              <span>{isSyncing ? '동기화 중...' : '실시간 동기화'}</span>
-            </button>
+            {/* Live Sync button ONLY rendered when isAdmin is true */}
+            {isAdmin && (
+              <div className="flex items-center gap-1 bg-purple-950/40 p-0.5 rounded-lg border border-purple-500/30">
+                <button
+                  onClick={handleLiveSync}
+                  disabled={isSyncing}
+                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-mono font-bold transition-all shadow-glow-neon whitespace-nowrap cursor-pointer ${
+                    isSyncing
+                      ? 'bg-purple-600/40 text-purple-200 animate-pulse'
+                      : 'bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-400/40'
+                  }`}
+                  title="FotMob / Wyscout 실시간 경기 스탯 & 5각 레이더 지표 자동 갱신 (관리자 전용)"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-purple-400' : 'text-purple-300'}`} />
+                  <span>{isSyncing ? '동기화 중...' : '⚡ 실시간 동기화'}</span>
+                </button>
+                <button
+                  onClick={handleAdminLogout}
+                  title="관리자 모드 잠금 (로그아웃)"
+                  className="p-1 hover:bg-purple-900/40 rounded text-purple-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  <Unlock className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
 
             <button
               onClick={() => setIsShortlistOpen(true)}
@@ -787,6 +858,68 @@ export default function App() {
         isOpen={isMetricGuideOpen}
         onClose={() => setIsMetricGuideOpen(false)}
       />
+
+      {/* Admin Passcode Modal */}
+      {isAdminModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#121226] border border-purple-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400">
+                <Key className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-white font-mono font-bold text-sm">관리자 보안 인증 (Admin)</h3>
+                <p className="text-[11px] text-gray-400 font-mono">실시간 데이터 동기화 관리 권한</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleAdminLogin} className="flex flex-col gap-4">
+              <div>
+                <label className="text-xs font-mono text-gray-300 block mb-1.5">
+                  관리자 보안 키 (Admin Key)
+                </label>
+                <input
+                  type="password"
+                  value={adminPasswordInput}
+                  onChange={(e) => setAdminPasswordInput(e.target.value)}
+                  placeholder="관리자 키 입력 (기본: scout2026)"
+                  className="w-full bg-[#0a0a16] border border-[#2a2e5c] focus:border-purple-400 rounded-lg px-3 py-2 text-sm text-white font-mono outline-none"
+                  autoFocus
+                />
+              </div>
+
+              <div className="flex items-center justify-between gap-2 pt-2">
+                {isAdmin ? (
+                  <button
+                    type="button"
+                    onClick={handleAdminLogout}
+                    className="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-mono border border-rose-500/30 cursor-pointer"
+                  >
+                    모드 해제
+                  </button>
+                ) : (
+                  <div></div>
+                )}
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsAdminModalOpen(false)}
+                    className="px-3 py-1.5 rounded-lg bg-[#181832] text-gray-400 hover:text-white text-xs font-mono border border-[#2a2e5c] cursor-pointer"
+                  >
+                    닫기
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-mono font-bold shadow-glow-neon cursor-pointer"
+                  >
+                    인증하기
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

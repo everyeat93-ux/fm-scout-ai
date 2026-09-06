@@ -5,7 +5,7 @@ and Wyscout/StatsBomb legal compliance data.
 """
 import os
 from typing import Optional, List, Dict, Any
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -13,6 +13,8 @@ from pydantic import BaseModel
 
 from database import get_db_connection, init_db
 from similarity_engine import find_similar_players, compare_two_players, get_all_player_feature_vectors, calculate_manager_tactical_fit
+
+ADMIN_SECRET_KEY = os.environ.get("FM_ADMIN_KEY", "scout2026")
 
 app = FastAPI(
     title="FM Scout AI (FC Finder) API",
@@ -313,8 +315,18 @@ def get_legal_info():
     }
 
 @app.post("/api/admin/sync-live-data")
-def sync_live_data(max_players: int = 150):
-    """Triggers live football data synchronization from FotMob / Wyscout."""
+def sync_live_data(
+    max_players: int = 150,
+    key: Optional[str] = None,
+    x_admin_key: Optional[str] = Header(None, alias="X-Admin-Key")
+):
+    """Triggers live football data synchronization from FotMob / Wyscout (Admin only)."""
+    provided_key = x_admin_key or key
+    if provided_key != ADMIN_SECRET_KEY:
+        raise HTTPException(
+            status_code=403, 
+            detail="관리자 보안 키(Admin Key)가 일치하지 않습니다. 관리자 권한이 필요합니다."
+        )
     try:
         from pipeline.sync_live_football_data import run_live_synchronization
         result = run_live_synchronization(max_live_fetches=max_players)
