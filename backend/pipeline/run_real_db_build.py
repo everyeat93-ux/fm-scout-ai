@@ -906,6 +906,13 @@ def build_100pct_real_database():
     conn.close()
     print(f"SUCCESS: 100% Authentic Real Player Database populated with {len(players)} players into scout_hub.sqlite!")
 
+    # Synchronize comprehensive FotMob transfer records
+    try:
+        from pipeline.sync_fotmob_transfers import build_and_sync_all
+        build_and_sync_all()
+    except Exception as e:
+        print(f"FotMob transfer sync note: {e}")
+
 if __name__ == "__main__":
     build_100pct_real_database()
 
