@@ -32,85 +32,85 @@ export default function FilterControls({
   };
 
   return (
-    <div className="p-4 rounded-xl bg-[#121226] border border-[#1f2240] flex flex-col gap-4">
+    <div className="p-4 sm:p-5 rounded-2xl bg-white border-2 border-gray-900 shadow-sm flex flex-col gap-4 text-gray-900 select-none">
       {/* Top Bar: Algorithm Toggle & Position Grouping */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* 1. Algorithm Switcher (4 Modes: Hybrid, Sequential, Cosine, Euclidean) */}
+        {/* 1. Algorithm Switcher */}
         <div>
-          <label className="text-xs font-mono font-bold text-gray-300 mb-1.5 flex items-center justify-between">
+          <label className="text-xs font-mono font-bold text-gray-800 mb-1.5 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
-              <Compass className="w-3.5 h-3.5 text-[#00ff88]" />
+              <Compass className="w-3.5 h-3.5 text-purple-600" />
               AI 유사도 알고리즘 (Algorithm)
             </span>
-            <span className="text-[10px] text-[#00ff88] font-mono">
+            <span className="text-[10px] text-purple-700 font-mono font-bold">
               {algorithm === 'hybrid' ? '🎯 앙상블 결합' : algorithm === 'sequential' ? '🔄 2단계 순차' : algorithm === 'cosine' ? '스타일 비율' : '체급 볼륨'}
             </span>
           </label>
 
-          <div className="grid grid-cols-2 gap-2 bg-[#0a0a16] p-1.5 rounded-lg border border-[#1f2240]">
+          <div className="grid grid-cols-2 gap-2 bg-gray-50 p-1.5 rounded-xl border border-gray-300">
             <button
               onClick={() => setAlgorithm('hybrid')}
-              className={`py-2 px-2.5 rounded-md text-xs font-mono transition-all flex flex-col items-start ${
+              className={`py-2 px-2.5 rounded-lg text-xs font-mono transition-all flex flex-col items-start border cursor-pointer ${
                 algorithm === 'hybrid'
-                  ? 'bg-[#00ff88]/20 border border-[#00ff88] text-[#00ff88] font-bold shadow-glow-neon'
-                  : 'text-gray-400 hover:text-gray-200 border border-transparent'
+                  ? 'bg-purple-100 border-purple-600 text-purple-950 font-bold shadow-xs'
+                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200'
               }`}
             >
               <span className="text-[11px] font-bold flex items-center gap-1">
-                🎯 하이브리드 앙상블 <span className="text-[9px] px-1 py-0.2 bg-[#00ff88]/20 rounded text-[#00ff88]">추천</span>
+                🎯 하이브리드 앙상블 <span className="text-[9px] px-1 py-0.2 bg-emerald-100 text-emerald-800 rounded font-bold">추천</span>
               </span>
-              <span className="text-[9px] text-gray-400">스타일(코사인) + 체급(유클리드) 결합</span>
+              <span className="text-[9px] text-gray-500">스타일(코사인) + 체급(유클리드) 결합</span>
             </button>
 
             <button
               onClick={() => setAlgorithm('sequential')}
-              className={`py-2 px-2.5 rounded-md text-xs font-mono transition-all flex flex-col items-start ${
+              className={`py-2 px-2.5 rounded-lg text-xs font-mono transition-all flex flex-col items-start border cursor-pointer ${
                 algorithm === 'sequential'
-                  ? 'bg-[#a855f7]/20 border border-[#a855f7] text-[#c084fc] font-bold'
-                  : 'text-gray-400 hover:text-gray-200 border border-transparent'
+                  ? 'bg-purple-100 border-purple-600 text-purple-950 font-bold shadow-xs'
+                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200'
               }`}
             >
               <span className="text-[11px] font-bold">🔄 2단계 순차 스카우팅</span>
-              <span className="text-[9px] text-gray-400">1단계 스타일 선별 → 2단계 체급순 정렬</span>
+              <span className="text-[9px] text-gray-500">1단계 스타일 선별 → 2단계 체급순</span>
             </button>
 
             <button
               onClick={() => setAlgorithm('cosine')}
-              className={`py-2 px-2.5 rounded-md text-xs font-mono transition-all flex flex-col items-start ${
+              className={`py-2 px-2.5 rounded-lg text-xs font-mono transition-all flex flex-col items-start border cursor-pointer ${
                 algorithm === 'cosine'
-                  ? 'bg-[#00ff88]/20 border border-[#00ff88] text-[#00ff88] font-bold'
-                  : 'text-gray-400 hover:text-gray-200 border border-transparent'
+                  ? 'bg-purple-100 border-purple-600 text-purple-950 font-bold shadow-xs'
+                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200'
               }`}
             >
               <span className="text-[11px] font-bold">① 코사인 유사도</span>
-              <span className="text-[9px] text-gray-400">순수 플레이스타일 비율 (가성비 진주)</span>
+              <span className="text-[9px] text-gray-500">순수 플레이스타일 비율 (가성비 진주)</span>
             </button>
 
             <button
               onClick={() => setAlgorithm('euclidean')}
-              className={`py-2 px-2.5 rounded-md text-xs font-mono transition-all flex flex-col items-start ${
+              className={`py-2 px-2.5 rounded-lg text-xs font-mono transition-all flex flex-col items-start border cursor-pointer ${
                 algorithm === 'euclidean'
-                  ? 'bg-[#00e5ff]/20 border border-[#00e5ff] text-[#00e5ff] font-bold'
-                  : 'text-gray-400 hover:text-gray-200 border border-transparent'
+                  ? 'bg-purple-100 border-purple-600 text-purple-950 font-bold shadow-xs'
+                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200'
               }`}
             >
               <span className="text-[11px] font-bold">② 유클리드 거리</span>
-              <span className="text-[9px] text-gray-400">순수 절대 퍼포먼스 볼륨 (완성형 주전)</span>
+              <span className="text-[9px] text-gray-500">순수 절대 퍼포먼스 볼륨 (완성형 주전)</span>
             </button>
           </div>
 
           {/* Sub-slider for Hybrid Ensemble Balance */}
           {algorithm === 'hybrid' && setHybridBalance && (
-            <div className="mt-2 p-2.5 rounded-lg bg-[#0e0e22] border border-[#1f2240] flex flex-col gap-1.5 animate-fadeIn">
+            <div className="mt-2 p-2.5 rounded-lg bg-gray-50 border border-gray-300 flex flex-col gap-1.5">
               <div className="flex items-center justify-between text-[10px] font-mono">
-                <span className="text-gray-400">
-                  체급 볼륨 <strong className="text-[#00e5ff]">{Math.round((1 - hybridBalance) * 100)}%</strong>
+                <span className="text-gray-600">
+                  체급 볼륨 <strong className="text-blue-700">{Math.round((1 - hybridBalance) * 100)}%</strong>
                 </span>
-                <span className="text-white font-bold">
-                  [ 앙상블 가중치 밸런스: {Math.round(hybridBalance * 100)} : {Math.round((1 - hybridBalance) * 100)} ]
+                <span className="text-gray-900 font-bold">
+                  [ 앙상블 밸런스: {Math.round(hybridBalance * 100)} : {Math.round((1 - hybridBalance) * 100)} ]
                 </span>
-                <span className="text-gray-400">
-                  스타일 비율 <strong className="text-[#00ff88]">{Math.round(hybridBalance * 100)}%</strong>
+                <span className="text-gray-600">
+                  스타일 비율 <strong className="text-purple-700">{Math.round(hybridBalance * 100)}%</strong>
                 </span>
               </div>
               <input
@@ -120,17 +120,17 @@ export default function FilterControls({
                 step="0.05"
                 value={hybridBalance}
                 onChange={(e) => setHybridBalance(parseFloat(e.target.value))}
-                className="w-full h-1.5 bg-[#1f2240] rounded-lg appearance-none cursor-pointer accent-[#00ff88]"
+                className="w-full h-1.5 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-purple-600"
               />
             </div>
           )}
 
           {/* Sub-slider for Sequential Cutoff */}
           {algorithm === 'sequential' && setSequentialCutoff && (
-            <div className="mt-2 p-2.5 rounded-lg bg-[#0e0e22] border border-[#1f2240] flex flex-col gap-1.5 animate-fadeIn">
+            <div className="mt-2 p-2.5 rounded-lg bg-gray-50 border border-gray-300 flex flex-col gap-1.5">
               <div className="flex items-center justify-between text-[10px] font-mono">
-                <span className="text-gray-400">1단계 플레이스타일 최소 일치율 커트라인:</span>
-                <span className="text-[#c084fc] font-bold font-mono">{sequentialCutoff}% 이상</span>
+                <span className="text-gray-600">1단계 플레이스타일 최소 일치율 커트라인:</span>
+                <span className="text-purple-700 font-bold font-mono">{sequentialCutoff}% 이상</span>
               </div>
               <input
                 type="range"
@@ -139,29 +139,29 @@ export default function FilterControls({
                 step="1"
                 value={sequentialCutoff}
                 onChange={(e) => setSequentialCutoff(parseFloat(e.target.value))}
-                className="w-full h-1.5 bg-[#1f2240] rounded-lg appearance-none cursor-pointer accent-[#c084fc]"
+                className="w-full h-1.5 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-purple-600"
               />
             </div>
           )}
         </div>
 
-        {/* 2. Position Filter (Strict vs Group vs All) */}
+        {/* 2. Position Filter */}
         <div>
-          <label className="text-xs font-mono font-bold text-gray-300 mb-1.5 flex items-center justify-between">
+          <label className="text-xs font-mono font-bold text-gray-800 mb-1.5 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-[#00e5ff]" />
+              <Target className="w-3.5 h-3.5 text-purple-600" />
               포지션 전처리 필터링 (Position Scope)
             </span>
-            <span className="text-[10px] text-gray-400 font-normal">축구 도메인 왜곡 방지</span>
+            <span className="text-[10px] text-gray-500 font-normal">축구 도메인 왜곡 방지</span>
           </label>
 
-          <div className="grid grid-cols-3 gap-1.5 bg-[#0a0a16] p-1 rounded-lg border border-[#1f2240]">
+          <div className="grid grid-cols-3 gap-1.5 bg-gray-50 p-1 rounded-xl border border-gray-300">
             <button
               onClick={() => setPositionMatch('group')}
-              className={`py-2 px-2 text-center rounded-md text-xs font-mono transition-all ${
+              className={`py-2 px-2 text-center rounded-lg text-xs font-mono transition-all border cursor-pointer ${
                 positionMatch === 'group'
-                  ? 'bg-[#181832] border border-[#00e5ff] text-[#00e5ff] font-bold'
-                  : 'text-gray-400 hover:text-gray-200 border border-transparent'
+                  ? 'bg-purple-100 border-purple-600 text-purple-950 font-bold shadow-xs'
+                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200'
               }`}
             >
               군집 (MF/FW/DF)
@@ -169,10 +169,10 @@ export default function FilterControls({
 
             <button
               onClick={() => setPositionMatch('strict')}
-              className={`py-2 px-2 text-center rounded-md text-xs font-mono transition-all ${
+              className={`py-2 px-2 text-center rounded-lg text-xs font-mono transition-all border cursor-pointer ${
                 positionMatch === 'strict'
-                  ? 'bg-[#181832] border border-[#00e5ff] text-[#00e5ff] font-bold'
-                  : 'text-gray-400 hover:text-gray-200 border border-transparent'
+                  ? 'bg-purple-100 border-purple-600 text-purple-950 font-bold shadow-xs'
+                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200'
               }`}
             >
               엄격 (동일 포지션)
@@ -180,245 +180,191 @@ export default function FilterControls({
 
             <button
               onClick={() => setPositionMatch('all')}
-              className={`py-2 px-2 text-center rounded-md text-xs font-mono transition-all ${
+              className={`py-2 px-2 text-center rounded-lg text-xs font-mono transition-all border cursor-pointer ${
                 positionMatch === 'all'
-                  ? 'bg-[#181832] border border-[#00e5ff] text-[#00e5ff] font-bold'
-                  : 'text-gray-400 hover:text-gray-200 border border-transparent'
+                  ? 'bg-purple-100 border-purple-600 text-purple-950 font-bold shadow-xs'
+                  : 'bg-white text-gray-600 hover:text-gray-900 border-gray-200'
               }`}
             >
-              전체 포지션
+              전체 (포지션 무관)
             </button>
+          </div>
+
+          {/* Quick Real-World Constraints (Age, Market Value, League Tier) */}
+          <div className="grid grid-cols-3 gap-2 mt-3 text-xs font-mono">
+            {/* Max Market Value */}
+            <div>
+              <span className="text-[10px] text-gray-600 flex items-center gap-1 mb-1 font-bold">
+                <DollarSign className="w-3 h-3 text-emerald-600" /> 최대 이적료:
+              </span>
+              <select
+                value={maxMarketValue || ""}
+                onChange={(e) => setMaxMarketValue(e.target.value ? parseFloat(e.target.value) : null)}
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs text-gray-900 focus:outline-none focus:border-purple-600"
+              >
+                <option value="">제한 없음 (전체)</option>
+                <option value="10">€10M 이하 (초가성비)</option>
+                <option value="25">€25M 이하 (중저가 보석)</option>
+                <option value="50">€50M 이하 (준척급 주전)</option>
+                <option value="80">€80M 이하 (빅클럽 수준)</option>
+              </select>
+            </div>
+
+            {/* Max Age */}
+            <div>
+              <span className="text-[10px] text-gray-600 flex items-center gap-1 mb-1 font-bold">
+                <Calendar className="w-3 h-3 text-blue-600" /> 최대 나이:
+              </span>
+              <select
+                value={maxAge || ""}
+                onChange={(e) => setMaxAge(e.target.value ? parseInt(e.target.value) : null)}
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs text-gray-900 focus:outline-none focus:border-purple-600"
+              >
+                <option value="">제한 없음 (전체)</option>
+                <option value="21">21세 이하 (원더키드)</option>
+                <option value="23">23세 이하 (올림픽/유망주)</option>
+                <option value="26">26세 이하 (전성기 초입)</option>
+                <option value="30">30세 이하 (완성형 주전)</option>
+              </select>
+            </div>
+
+            {/* League Tier */}
+            <div>
+              <span className="text-[10px] text-gray-600 flex items-center gap-1 mb-1 font-bold">
+                <Award className="w-3 h-3 text-amber-600" /> 리그 체급:
+              </span>
+              <select
+                value={leagueTier || ""}
+                onChange={(e) => setLeagueTier(e.target.value ? parseInt(e.target.value) : null)}
+                className="w-full bg-gray-50 border border-gray-300 rounded-lg p-1.5 text-xs text-gray-900 focus:outline-none focus:border-purple-600"
+              >
+                <option value="">전체 리그</option>
+                <option value="1">유럽 5대 리그만 (Tier 1)</option>
+                <option value="2">5대 리그 + 포르투갈/네덜란드</option>
+                <option value="3">글로벌 하위/중소 리그 포함</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Sliders: Budget, Age, League Tier */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-[#1f2240]">
-        {/* Budget Max Market Value Slider */}
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between text-xs font-mono">
-            <span className="text-gray-400 flex items-center gap-1">
-              <DollarSign className="w-3.5 h-3.5 text-yellow-400" />
-              최대 이적료 (Budget):
-            </span>
-            <span className="text-[#00ff88] font-bold">
-              {maxMarketValue ? `€${maxMarketValue}M 이하` : '전체 (제한없음)'}
-            </span>
-          </div>
-          <input
-            type="range"
-            min="5"
-            max="150"
-            step="5"
-            value={maxMarketValue || 150}
-            onChange={(e) => {
-              const val = parseInt(e.target.value);
-              setMaxMarketValue(val >= 150 ? null : val);
-            }}
-            className="w-full accent-[#00ff88] bg-[#0a0a16] h-1.5 rounded-lg appearance-none cursor-pointer"
-          />
-          <div className="flex justify-between text-[10px] font-mono text-gray-400">
-            <button onClick={() => setMaxMarketValue(15)} className="hover:text-white">€15M 흙속의진주</button>
-            <button onClick={() => setMaxMarketValue(35)} className="hover:text-white">€35M 가성비</button>
-            <button onClick={() => setMaxMarketValue(null)} className="hover:text-white">전체</button>
-          </div>
-        </div>
-
-        {/* Max Age Slider (Wonderkid filter) */}
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between text-xs font-mono">
-            <span className="text-gray-400 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-[#00e5ff]" />
-              최대 나이 (Age):
-            </span>
-            <span className="text-[#00e5ff] font-bold">
-              {maxAge ? `${maxAge}세 이하` : '전체 연령'}
-            </span>
-          </div>
-          <input
-            type="range"
-            min="19"
-            max="35"
-            step="1"
-            value={maxAge || 35}
-            onChange={(e) => {
-              const val = parseInt(e.target.value);
-              setMaxAge(val >= 35 ? null : val);
-            }}
-            className="w-full accent-[#00e5ff] bg-[#0a0a16] h-1.5 rounded-lg appearance-none cursor-pointer"
-          />
-          <div className="flex justify-between text-[10px] font-mono text-gray-400">
-            <button onClick={() => setMaxAge(21)} className="hover:text-white">U-21 원더키드</button>
-            <button onClick={() => setMaxAge(23)} className="hover:text-white">U-23 유망주</button>
-            <button onClick={() => setMaxAge(null)} className="hover:text-white">전체</button>
-          </div>
-        </div>
-
-        {/* League Scope Filter */}
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between text-xs font-mono">
-            <span className="text-gray-400 flex items-center gap-1">
-              <Award className="w-3.5 h-3.5 text-purple-400" />
-              리그 범위 (Leagues):
-            </span>
-            <span className="text-purple-300 font-bold">
-              {leagueTier === 1 ? '5대 빅리그' : leagueTier === 2 || leagueTier === 3 ? '하위/세컨더리 리그' : '모든 리그'}
-            </span>
-          </div>
-          <div className="grid grid-cols-3 gap-1 bg-[#0a0a16] p-0.5 rounded-lg border border-[#1f2240]">
-            <button
-              onClick={() => setLeagueTier(null)}
-              className={`py-1 text-[10px] font-mono rounded ${leagueTier === null ? 'bg-[#2a2e5c] text-white font-bold' : 'text-gray-400'}`}
-            >
-              전체
-            </button>
-            <button
-              onClick={() => setLeagueTier(2)}
-              className={`py-1 text-[10px] font-mono rounded ${leagueTier === 2 ? 'bg-[#2a2e5c] text-purple-300 font-bold' : 'text-gray-400'}`}
-            >
-              하위 리그
-            </button>
-            <button
-              onClick={() => setLeagueTier(1)}
-              className={`py-1 text-[10px] font-mono rounded ${leagueTier === 1 ? 'bg-[#2a2e5c] text-white font-bold' : 'text-gray-400'}`}
-            >
-              5대 빅리그
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Advanced Custom Pillar Weights Toggle */}
-      <div className="flex items-center justify-between pt-2 border-t border-[#1f2240]">
+      {/* Advanced Custom Pillar Weights (Collapsible) */}
+      <div className="border-t border-gray-200 pt-2.5">
         <button
           onClick={() => setShowAdvancedWeights(!showAdvancedWeights)}
-          className="text-[11px] font-mono text-gray-400 hover:text-white flex items-center gap-1.5"
+          className="text-xs font-mono font-bold text-gray-700 hover:text-black flex items-center gap-1.5 cursor-pointer"
         >
-          <Sliders className="w-3 h-3 text-[#00ff88]" />
-          {showAdvancedWeights ? '▼ 5대 전술 능력 가중치 접기' : '▶ 5대 전술 능력 가중치 커스텀 조정'}
+          <Sliders className="w-3.5 h-3.5 text-purple-600" />
+          <span>전술 5대 영역 가중치 미세 조정 (Custom Pillar Weights) {showAdvancedWeights ? '접기 ▲' : '열기 ▼'}</span>
         </button>
 
-        <button
-          onClick={onResetFilters}
-          className="text-[11px] font-mono text-gray-400 hover:text-red-400 flex items-center gap-1 transition-colors"
-        >
-          <RefreshCw className="w-3 h-3" />
-          필터 초기화
-        </button>
+        {showAdvancedWeights && (
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-3 p-3 rounded-xl bg-gray-50 border border-gray-300 font-mono text-xs">
+            {/* Vision */}
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="text-gray-700">창의성 (Vision)</span>
+                <span className="text-purple-700 font-bold">{customWeights.vision.toFixed(1)}x</span>
+              </div>
+              <input
+                type="range"
+                min="0.1"
+                max="2.5"
+                step="0.1"
+                value={customWeights.vision}
+                onChange={(e) => handleWeightChange('vision', e.target.value)}
+                className="w-full h-1 bg-gray-300 rounded appearance-none cursor-pointer accent-purple-600"
+              />
+            </div>
+
+            {/* Striking */}
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="text-gray-700">슈팅 (Striking)</span>
+                <span className="text-rose-700 font-bold">{customWeights.striking.toFixed(1)}x</span>
+              </div>
+              <input
+                type="range"
+                min="0.1"
+                max="2.5"
+                step="0.1"
+                value={customWeights.striking}
+                onChange={(e) => handleWeightChange('striking', e.target.value)}
+                className="w-full h-1 bg-gray-300 rounded appearance-none cursor-pointer accent-rose-600"
+              />
+            </div>
+
+            {/* Dribble */}
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="text-gray-700">드리블 (Dribble)</span>
+                <span className="text-amber-700 font-bold">{customWeights.dribble.toFixed(1)}x</span>
+              </div>
+              <input
+                type="range"
+                min="0.1"
+                max="2.5"
+                step="0.1"
+                value={customWeights.dribble}
+                onChange={(e) => handleWeightChange('dribble', e.target.value)}
+                className="w-full h-1 bg-gray-300 rounded appearance-none cursor-pointer accent-amber-600"
+              />
+            </div>
+
+            {/* Defense */}
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="text-gray-700">수비 (Defense)</span>
+                <span className="text-blue-700 font-bold">{customWeights.defense.toFixed(1)}x</span>
+              </div>
+              <input
+                type="range"
+                min="0.1"
+                max="2.5"
+                step="0.1"
+                value={customWeights.defense}
+                onChange={(e) => handleWeightChange('defense', e.target.value)}
+                className="w-full h-1 bg-gray-300 rounded appearance-none cursor-pointer accent-blue-600"
+              />
+            </div>
+
+            {/* Physical */}
+            <div>
+              <div className="flex justify-between text-[11px] mb-1">
+                <span className="text-gray-700">피지컬 (Physical)</span>
+                <span className="text-emerald-700 font-bold">{customWeights.physical.toFixed(1)}x</span>
+              </div>
+              <input
+                type="range"
+                min="0.1"
+                max="2.5"
+                step="0.1"
+                value={customWeights.physical}
+                onChange={(e) => handleWeightChange('physical', e.target.value)}
+                className="w-full h-1 bg-gray-300 rounded appearance-none cursor-pointer accent-emerald-600"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Advanced Weights Sliders */}
-      {showAdvancedWeights && (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 p-3 rounded-lg bg-[#0a0a16] border border-[#1f2240] text-xs font-mono">
-          <div>
-            <div className="text-[10px] text-gray-400 flex justify-between">
-              <span>창의성 (Vision)</span>
-              <span className="text-[#00ff88]">{customWeights.vision}x</span>
-            </div>
-            <input
-              type="range"
-              min="0.2"
-              max="2.0"
-              step="0.1"
-              value={customWeights.vision}
-              onChange={(e) => handleWeightChange('vision', e.target.value)}
-              className="w-full accent-[#00ff88]"
-            />
-          </div>
-
-          <div>
-            <div className="text-[10px] text-gray-400 flex justify-between">
-              <span>슈팅 (Striking)</span>
-              <span className="text-[#00ff88]">{customWeights.striking}x</span>
-            </div>
-            <input
-              type="range"
-              min="0.2"
-              max="2.0"
-              step="0.1"
-              value={customWeights.striking}
-              onChange={(e) => handleWeightChange('striking', e.target.value)}
-              className="w-full accent-[#00ff88]"
-            />
-          </div>
-
-          <div>
-            <div className="text-[10px] text-gray-400 flex justify-between">
-              <span>드리블 (Dribble)</span>
-              <span className="text-[#00ff88]">{customWeights.dribble}x</span>
-            </div>
-            <input
-              type="range"
-              min="0.2"
-              max="2.0"
-              step="0.1"
-              value={customWeights.dribble}
-              onChange={(e) => handleWeightChange('dribble', e.target.value)}
-              className="w-full accent-[#00ff88]"
-            />
-          </div>
-
-          <div>
-            <div className="text-[10px] text-gray-400 flex justify-between">
-              <span>수비력 (Defense)</span>
-              <span className="text-[#00ff88]">{customWeights.defense}x</span>
-            </div>
-            <input
-              type="range"
-              min="0.2"
-              max="2.0"
-              step="0.1"
-              value={customWeights.defense}
-              onChange={(e) => handleWeightChange('defense', e.target.value)}
-              className="w-full accent-[#00ff88]"
-            />
-          </div>
-
-          <div>
-            <div className="text-[10px] text-gray-400 flex justify-between">
-              <span>경합력 (Physical)</span>
-              <span className="text-[#00ff88]">{customWeights.physical}x</span>
-            </div>
-            <input
-              type="range"
-              min="0.2"
-              max="2.0"
-              step="0.1"
-              value={customWeights.physical}
-              onChange={(e) => handleWeightChange('physical', e.target.value)}
-              className="w-full accent-[#00ff88]"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Search & Apply Action CTA Bar */}
-      <div className="pt-3 border-t border-[#1f2240] flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="text-xs font-mono text-gray-400 flex items-center gap-1.5">
-          <Zap className="w-3.5 h-3.5 text-[#00ff88]" />
-          <span>설정된 필터 조건으로 <strong className="text-white font-bold">11,685명</strong> 전 세계 선수 풀을 정밀 스카우팅합니다.</span>
-        </div>
+      {/* Action Footer: Reset & Re-run Scouting Button */}
+      <div className="flex items-center justify-between pt-2 border-t border-gray-200">
+        <button
+          onClick={onResetFilters}
+          className="text-xs font-mono text-gray-500 hover:text-gray-800 flex items-center gap-1 cursor-pointer transition-colors"
+        >
+          <RefreshCw className="w-3.5 h-3.5" />
+          <span>필터 초기화</span>
+        </button>
 
         <button
           onClick={onRunScouting}
           disabled={loading}
-          className={`w-full sm:w-auto py-2.5 px-6 rounded-xl font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-lg ${
-            loading
-              ? 'bg-gray-700 text-gray-300 cursor-not-allowed opacity-80'
-              : 'bg-gradient-to-r from-[#00ff88] via-[#00e5ff] to-[#00ff88] bg-[length:200%_auto] hover:bg-right text-[#0a0a16] shadow-glow-neon active:scale-95 cursor-pointer font-extrabold'
-          }`}
+          className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-bold text-xs font-mono shadow-sm transition-all cursor-pointer disabled:opacity-50"
         >
-          {loading ? (
-            <>
-              <RefreshCw className="w-4 h-4 animate-spin text-gray-300" />
-              <span>11,685명 정밀 분석 중...</span>
-            </>
-          ) : (
-            <>
-              <Search className="w-4 h-4 text-black stroke-[2.5]" />
-              <span>🚀 스카우팅 리포트 생성 & 검색 실행</span>
-            </>
-          )}
+          {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Search className="w-3.5 h-3.5 text-emerald-400" />}
+          <span>🚀 스카우팅 리포트 생성 & 검색 실행</span>
         </button>
       </div>
     </div>

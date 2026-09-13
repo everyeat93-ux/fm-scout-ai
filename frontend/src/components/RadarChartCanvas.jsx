@@ -1,48 +1,42 @@
 import React from 'react';
 
 /**
- * High-tech Tactical Radar Overlay Chart
- * Renders dual radar polygons:
- * - Target Player: Translucent dashed white line
- * - Scouted Candidate: Glowing Neon Green solid line with gradient fill
+ * Re-lab Infographic High-Contrast Dual Radar Chart
+ * Solves label ambiguity and delivers crystal-clear corner stat badges.
  */
 export default function RadarChartCanvas({
   targetScores = [80, 80, 80, 80, 80],
   candidateScores = [75, 75, 75, 75, 75],
-  targetName = "Target Player",
+  targetName = "Target",
   candidateName = "Candidate",
-  size = 320,
+  size = 200,
   showLegend = true,
   labels = [
-    { label: "창의성 & 패스", sub: "Vision", key: "vision" },
-    { label: "슈팅 & xG", sub: "Striking", key: "striking" },
-    { label: "온볼 & 운반", sub: "Dribble", key: "dribble" },
-    { label: "수비 엔진", sub: "Defense", key: "defense" },
-    { label: "피지컬 경합", sub: "Physical", key: "physical" }
+    { label: "창의성", key: "vision" },
+    { label: "슈팅", key: "striking" },
+    { label: "드리블", key: "dribble" },
+    { label: "수비", key: "defense" },
+    { label: "피지컬", key: "physical" }
   ]
 }) {
-  const center = size / 2;
-  const radius = (size / 2) - 48; // Padding for outer text labels
+  // Use normalized 200x200 coordinate space for robust responsive scaling
+  const V_SIZE = 200;
+  const center = 100;
+  const radius = 60; // Leaves 40px margin around perimeter for text badges
   const numAxes = labels.length;
   const angleStep = (Math.PI * 2) / numAxes;
-  // Rotate so that the first axis points straight up (-PI/2)
   const startAngle = -Math.PI / 2;
 
-  const safeTargetScores = (targetScores || [50, 50, 50, 50, 50]).map(v => (typeof v === 'number' && !isNaN(v) ? Math.max(0, Math.min(100, v)) : 50));
-  const safeCandidateScores = (candidateScores || [50, 50, 50, 50, 50]).map(v => (typeof v === 'number' && !isNaN(v) ? Math.max(0, Math.min(100, v)) : 50));
-
-  // Function to get (x, y) coordinates for a given index and value (0-100)
-  const getCoordinates = (index, value) => {
+  const getCoordinates = (index, value, customRadius = radius) => {
     const angle = startAngle + index * angleStep;
     const safeVal = (typeof value === 'number' && !isNaN(value)) ? Math.max(0, Math.min(100, value)) : 50;
-    const r = (safeVal / 100) * radius;
+    const r = (safeVal / 100) * customRadius;
     return {
       x: center + r * Math.cos(angle),
       y: center + r * Math.sin(angle)
     };
   };
 
-  // Generate polygon points string
   const getPolygonPoints = (scores) => {
     const validScores = (scores || [50, 50, 50, 50, 50]).map(v => (typeof v === 'number' && !isNaN(v) ? Math.max(0, Math.min(100, v)) : 50));
     return validScores
@@ -53,37 +47,44 @@ export default function RadarChartCanvas({
       .join(" ");
   };
 
-  const gridLevels = [20, 40, 60, 80, 100];
+  const gridLevels = [25, 50, 75, 100];
 
   return (
-    <div className="flex flex-col items-center justify-center relative select-none">
+    <div className="flex flex-col items-center justify-center relative select-none w-full max-w-[160px] sm:max-w-[200px]">
+      {/* Legend Indicator with distinct roles */}
+      {showLegend && (
+        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-1 text-[9px] sm:text-[10px] font-sans font-bold flex-wrap">
+          <div className="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block"></span>
+            <span className="text-amber-900 truncate max-w-[70px] sm:max-w-[90px]">기준: {targetName}</span>
+          </div>
+          <div className="flex items-center gap-1 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-600 inline-block"></span>
+            <span className="text-purple-900 font-extrabold truncate max-w-[70px] sm:max-w-[90px]">추천: {candidateName}</span>
+          </div>
+        </div>
+      )}
+
       <svg
-        width={size}
-        height={size}
-        viewBox={`0 0 ${size} ${size}`}
-        className="overflow-visible drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"
+        viewBox={`0 0 ${V_SIZE} ${V_SIZE}`}
+        className="w-full h-auto overflow-visible"
+        style={{ maxWidth: `${size}px` }}
       >
         <defs>
-          {/* Candidate Polygon Gradient */}
-          <linearGradient id="neonGreenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#00ff88" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#00e5ff" stopOpacity="0.25" />
+          {/* Candidate Purple Gradient */}
+          <linearGradient id="relabPurpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#6366f1" stopOpacity="0.3" />
           </linearGradient>
-          
-          {/* Target Polygon Gradient */}
-          <radialGradient id="targetWhiteGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
-          </radialGradient>
 
-          {/* Glow Filter */}
-          <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
+          {/* Target Amber Gradient */}
+          <linearGradient id="relabAmberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#d97706" stopOpacity="0.1" />
+          </linearGradient>
         </defs>
 
-        {/* Concentric Grid Polygons */}
+        {/* Concentric Grid Web */}
         {gridLevels.map((lvl) => {
           const pts = labels
             .map((_, i) => {
@@ -95,9 +96,9 @@ export default function RadarChartCanvas({
             <polygon
               key={`grid-${lvl}`}
               points={pts}
-              fill="transparent"
-              stroke="#1f2240"
-              strokeWidth={lvl === 100 ? "1.5" : "1"}
+              fill={lvl % 50 === 0 ? "rgba(241, 245, 249, 0.7)" : "transparent"}
+              stroke={lvl === 100 ? "#94a3b8" : "#cbd5e1"}
+              strokeWidth={lvl === 100 ? "1.2" : "0.7"}
               strokeDasharray={lvl === 100 ? "none" : "2,2"}
             />
           );
@@ -113,22 +114,21 @@ export default function RadarChartCanvas({
               y1={center}
               x2={pt.x}
               y2={pt.y}
-              stroke="#1f2240"
-              strokeWidth="1"
+              stroke="#cbd5e1"
+              strokeWidth="0.8"
             />
           );
         })}
 
-        {/* Target Player Polygon (Translucent White Dashed) */}
+        {/* Target Player Polygon (Amber Dashed) */}
         {targetScores && (
-          <g className="transition-all duration-500 ease-out">
+          <g>
             <polygon
               points={getPolygonPoints(targetScores)}
-              fill="url(#targetWhiteGradient)"
-              stroke="#ffffff"
-              strokeWidth="1.8"
-              strokeDasharray="4,3"
-              strokeOpacity="0.8"
+              fill="url(#relabAmberGrad)"
+              stroke="#d97706"
+              strokeWidth="1.6"
+              strokeDasharray="3,2"
             />
             {targetScores.map((score, i) => {
               const pt = getCoordinates(i, score);
@@ -137,101 +137,87 @@ export default function RadarChartCanvas({
                   key={`target-pt-${i}`}
                   cx={pt.x}
                   cy={pt.y}
-                  r="3"
-                  fill="#ffffff"
-                  stroke="#0a0a16"
-                  strokeWidth="1.5"
-                  opacity="0.85"
+                  r="2"
+                  fill="#f59e0b"
+                  stroke="#ffffff"
+                  strokeWidth="0.8"
                 />
               );
             })}
           </g>
         )}
 
-        {/* Candidate Player Polygon (Glowing Neon Green Solid) */}
+        {/* Candidate Player Polygon (Purple Solid) */}
         {candidateScores && (
-          <g className="transition-all duration-500 ease-out">
+          <g>
             <polygon
               points={getPolygonPoints(candidateScores)}
-              fill="url(#neonGreenGradient)"
-              stroke="#00ff88"
-              strokeWidth="2.5"
-              filter="url(#neonGlow)"
+              fill="url(#relabPurpleGrad)"
+              stroke="#6d28d9"
+              strokeWidth="2.2"
             />
             {candidateScores.map((score, i) => {
               const pt = getCoordinates(i, score);
               return (
-                <g key={`cand-pt-${i}`}>
-                  <circle
-                    cx={pt.x}
-                    cy={pt.y}
-                    r="4"
-                    fill="#00ff88"
-                    stroke="#0a0a16"
-                    strokeWidth="1.5"
-                    className="animate-pulse"
-                  />
-                  <circle
-                    cx={pt.x}
-                    cy={pt.y}
-                    r="1.5"
-                    fill="#ffffff"
-                  />
-                </g>
+                <circle
+                  key={`cand-pt-${i}`}
+                  cx={pt.x}
+                  cy={pt.y}
+                  r="3"
+                  fill="#7c3aed"
+                  stroke="#ffffff"
+                  strokeWidth="1.2"
+                />
               );
             })}
           </g>
         )}
 
-        {/* Axis Labels & Values */}
+        {/* Corner Stat Badges (Re-lab Corner Ratios) */}
         {labels.map((item, i) => {
-          const labelPt = getCoordinates(i, 120);
+          // Calculate label center with controlled radius
+          const labelDist = radius + 18;
+          const labelPt = getCoordinates(i, 100, labelDist);
           const isTop = i === 0;
           const isBottom = i === 2 || i === 3;
           const isRight = i === 1;
           const isLeft = i === 4;
 
           let textAnchor = "middle";
-          if (isRight) textAnchor = "start";
-          if (isLeft) textAnchor = "end";
+          let dx = 0;
+          if (isRight) { textAnchor = "start"; dx = 2; }
+          if (isLeft) { textAnchor = "end"; dx = -2; }
 
-          const candVal = candidateScores ? candidateScores[i] : 0;
-          const targetVal = targetScores ? targetScores[i] : 0;
+          const candVal = candidateScores ? Math.round(candidateScores[i]) : 0;
+          const targetVal = targetScores ? Math.round(targetScores[i]) : 0;
 
           return (
-            <g key={`label-${i}`} transform={`translate(${labelPt.x}, ${labelPt.y})`}>
+            <g key={`label-${i}`} transform={`translate(${labelPt.x + dx}, ${labelPt.y})`}>
               <text
                 textAnchor={textAnchor}
-                className="text-[11px] font-semibold fill-gray-300 tracking-tight"
-                dy={isTop ? "-8" : isBottom ? "14" : "0"}
+                fontSize="9"
+                fontWeight="800"
+                fontFamily="sans-serif"
+                fill="#0f172a"
+                dy={isTop ? "-7" : isBottom ? "9" : "-1"}
               >
                 {item.label}
               </text>
               <text
                 textAnchor={textAnchor}
-                className="text-[10px] font-mono fill-[#00ff88] font-bold"
-                dy={isTop ? "4" : isBottom ? "26" : "14"}
+                fontSize="8.5"
+                fontWeight="800"
+                fontFamily="monospace"
+                fill="#6d28d9"
+                dy={isTop ? "4" : isBottom ? "19" : "9"}
               >
-                {candVal.toFixed(0)} <tspan className="fill-gray-400 font-normal">/ {targetVal.toFixed(0)}</tspan>
+                {candVal}
+                <tspan fill="#b45309" fontWeight="700">/{targetVal}</tspan>
               </text>
             </g>
           );
         })}
       </svg>
-
-      {/* Legend Indicator */}
-      {showLegend && (
-        <div className="flex items-center gap-6 mt-4 text-xs font-mono">
-          <div className="flex items-center gap-2">
-            <span className="w-3.5 h-0.5 border-t-2 border-dashed border-white inline-block"></span>
-            <span className="text-gray-300">{targetName}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3.5 h-2 bg-[#00ff88]/30 border border-[#00ff88] rounded-sm inline-block shadow-glow-neon"></span>
-            <span className="text-[#00ff88] font-semibold">{candidateName}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

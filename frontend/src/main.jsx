@@ -20,16 +20,16 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#0a0a16] text-white flex flex-col items-center justify-center p-6 font-mono">
-          <div className="p-8 rounded-xl bg-[#121226] border border-red-500/40 max-w-lg text-center shadow-2xl">
-            <h2 className="text-lg font-bold text-red-400 mb-2">⚠️ 일시적 렌더링 오류 발생</h2>
-            <p className="text-xs text-gray-400 mb-4">{this.state.error?.message || "UI 렌더링 중 오류가 발생했습니다."}</p>
+        <div className="min-h-screen bg-gray-50 text-gray-900 flex flex-col items-center justify-center p-6 font-mono">
+          <div className="p-8 rounded-2xl bg-white border-2 border-gray-900 max-w-lg text-center shadow-2xl">
+            <h2 className="text-lg font-black text-rose-600 mb-2">⚠️ 일시적 렌더링 오류 발생</h2>
+            <p className="text-xs text-gray-600 mb-4">{this.state.error?.message || "UI 렌더링 중 오류가 발생했습니다."}</p>
             <button
               onClick={() => {
                 this.setState({ hasError: false });
                 window.location.reload();
               }}
-              className="px-4 py-2 bg-[#00ff88] text-black font-bold rounded-lg text-xs hover:brightness-110"
+              className="px-4 py-2 bg-gray-900 text-white font-bold rounded-xl text-xs hover:bg-gray-800 shadow-sm cursor-pointer"
             >
               🔄 페이지 새로고침
             </button>

@@ -1,9 +1,12 @@
-services:
+﻿services:
   - type: web
     name: fm-scout-ai
-    env: docker
+    runtime: docker
     plan: free
-    region: oregon
-    branch: main
-    autoDeploy: true
-    healthCheckPath: /api/health
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: FM_ADMIN_KEY
+        generateValue: true

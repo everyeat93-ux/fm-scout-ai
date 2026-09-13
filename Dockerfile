@@ -18,13 +18,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./backend/
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-# Build SQLite database with all 182+ player profiles
+# Build SQLite database with 2,400+ authentic real players
 WORKDIR /app/backend
-RUN python pipeline/build_db.py
+RUN python pipeline/run_real_db_build.py
 
-# Expose port (Default 8000, Render sets $PORT dynamically)
+# Expose port (Default 8000, Render/Railway sets $PORT dynamically)
 EXPOSE 8000
 ENV PORT=8000
 
-# Start production server
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT}
+# Start production server with dynamic port expansion
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]

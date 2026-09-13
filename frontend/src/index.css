@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -13,12 +13,13 @@
 
 body {
   margin: 0;
-  background-color: #0a0a16;
+  background-color: #f8fafc;
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.05) 0%, transparent 70%),
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 40px 40px, 40px 40px;
+    radial-gradient(#cbd5e1 1.2px, transparent 1.2px),
+    linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+  background-size: 20px 20px, 40px 40px, 40px 40px;
+  color: #0f172a;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
@@ -31,22 +32,25 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
 }
 
-/* Custom Scrollbar for Tactical UI */
+/* Custom Scrollbar for Clean UI */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a16;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1f2240;
+  background: #cbd5e1;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #00ff88;
+  background: #94a3b8;
 }
 
 /* Tier Grade Glowing Badges */
@@ -76,32 +80,35 @@ body {
   box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
 }
 .grade-badge-b {
-  background: #2a3b5c;
-  color: #7dd3fc;
-  border: 1px solid #38bdf8;
-  font-weight: 600;
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #7dd3fc;
+  font-weight: 700;
 }
 .grade-badge-c {
-  background: #262a3e;
-  color: #cbd5e1;
-  border: 1px solid #475569;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  font-weight: 700;
 }
 .grade-badge-d {
-  background: #1e1b2e;
-  color: #c084fc;
-  border: 1px solid #9333ea;
+  background: #f3e8ff;
+  color: #7e22ce;
+  border: 1px solid #d8b4fe;
+  font-weight: 700;
 }
 .grade-badge-f {
-  background: #1a1a24;
+  background: #f8fafc;
   color: #64748b;
-  border: 1px solid #334155;
+  border: 1px solid #e2e8f0;
+  font-weight: 700;
 }
 
 /* Tactical HUD corner accents */
 .tactical-box {
   position: relative;
-  background: #121226;
-  border: 1px solid #1f2240;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
 }
 .tactical-box::before {
   content: '';
@@ -110,8 +117,8 @@ body {
   left: -1px;
   width: 8px;
   height: 8px;
-  border-top: 2px solid #00ff88;
-  border-left: 2px solid #00ff88;
+  border-top: 2px solid #7c3aed;
+  border-left: 2px solid #7c3aed;
   pointer-events: none;
 }
 .tactical-box::after {
@@ -124,4 +131,24 @@ body {
   border-bottom: 2px solid #00ff88;
   border-right: 2px solid #00ff88;
   pointer-events: none;
+}
+
+/* Infographic Trading Card Styles (Re-lab Style) */
+.bg-graph-paper {
+  background-color: #ffffff;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.trading-card-border {
+  border: 2px solid #1a1a2e;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+}
+
+.stamp-box {
+  border: 1.5px solid #334155;
+  background: #f8fafc;
+  box-shadow: 1px 1px 0px #334155;
 }
