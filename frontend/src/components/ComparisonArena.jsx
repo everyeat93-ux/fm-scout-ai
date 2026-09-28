@@ -4,6 +4,7 @@ import {
   ChevronRight, Search, X, Trophy, Activity, Target, Flame
 } from 'lucide-react';
 import RadarChartCanvas from './RadarChartCanvas';
+import { API_BASE } from '../apiConfig';
 
 const countryFlags = {
   "South Korea": "🇰🇷",
@@ -84,7 +85,7 @@ export default function ComparisonArena({
     if (!playerAId || !playerBId) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/scout/compare', {
+      const res = await fetch(`${API_BASE}/api/scout/compare`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ player_a_id: playerAId, player_b_id: playerBId })

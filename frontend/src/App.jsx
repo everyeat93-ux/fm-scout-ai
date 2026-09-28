@@ -11,6 +11,7 @@ import ComparisonArena from './components/ComparisonArena';
 import LegalModal from './components/LegalModal';
 import MetricGuideModal from './components/MetricGuideModal';
 import ShortlistModal from './components/ShortlistModal';
+import { API_BASE } from './apiConfig';
 
 const countryFlags = {
   "South Korea": "🇰🇷",
@@ -221,8 +222,8 @@ export default function App() {
   const fetchInitialData = useCallback(async () => {
     try {
       const [playersRes, archRes] = await Promise.all([
-        fetch('/api/players?limit=1000'),
-        fetch('/api/archetypes')
+        fetch(`${API_BASE}/api/players?limit=1000`),
+        fetch(`${API_BASE}/api/archetypes`)
       ]);
       const pData = await playersRes.json();
       const aData = await archRes.json();
@@ -243,7 +244,7 @@ export default function App() {
     setIsSyncing(true);
     setSyncNotification({ type: 'info', message: '⚽ 실시간 경기 스탯 및 Wyscout 레이더 지표 동기화 중...' });
     try {
-      const res = await fetch('/api/admin/sync-live-data', {
+      const res = await fetch(`${API_BASE}/api/admin/sync-live-data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -274,7 +275,7 @@ export default function App() {
     if (!targetPlayerId) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/scout/similar', {
+      const res = await fetch(`${API_BASE}/api/scout/similar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

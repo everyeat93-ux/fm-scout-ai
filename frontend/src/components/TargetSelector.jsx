@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, User, Sparkles, Filter, ChevronDown } from 'lucide-react';
+import { API_BASE } from '../apiConfig';
 
 const countryFlags = {
   "South Korea": "🇰🇷",
@@ -51,7 +52,7 @@ export default function TargetSelector({
     const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
-        const res = await fetch(`/api/players?q=${encodeURIComponent(searchQuery)}&limit=50`);
+        const res = await fetch(`${API_BASE}/api/players?q=${encodeURIComponent(searchQuery)}&limit=50`);
         const data = await res.json();
         setSearchResults(data.players || []);
       } catch (err) {
